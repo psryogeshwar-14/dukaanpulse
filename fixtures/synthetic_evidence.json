@@ -1,0 +1,32 @@
+[
+  {
+    "evidence_id": "E1",
+    "url": "https://www.zomato.com/bangalore/breakfast-in-hsr",
+    "title": "Top Breakfast Places in HSR Layout, Bangalore - Zomato",
+    "snippet": "Popular morning cafes offer south Indian combos, filter coffee, sourdough toasts, and artisanal cold brew starting from 149 to 250 INR.",
+    "query": "cafe HSR Layout Bengaluru breakfast menu",
+    "retrieved_at": "2026-11-21T10:15:30Z",
+    "domain": "zomato.com",
+    "locality_match": "HSR Layout Bengaluru"
+  },
+  {
+    "evidence_id": "E2",
+    "url": "https://lbb.in/bangalore/best-cafes-hsr-layout-breakfast",
+    "title": "10 Best Cafes In HSR Layout For A Power Breakfast | LBB",
+    "snippet": "Several cafes near 27th Main offer morning combo platters with coffee under 200 INR without long wait times.",
+    "query": "cafe HSR Layout Bengaluru weekday breakfast offer",
+    "retrieved_at": "2026-11-21T10:15:32Z",
+    "domain": "lbb.in",
+    "locality_match": "HSR Layout 27th Main"
+  },
+  {
+    "evidence_id": "E3",
+    "url": "https://www.tripadvisor.in/Restaurants-g297628-zfn7211831-Bengaluru_Bangalore_District_Karnataka.html",
+    "title": "Breakfast Cafes in HSR Layout - TripAdvisor",
+    "snippet": "Cozy ambience, quick breakfast service, average spend 180-220 INR per person for breakfast.",
+    "query": "cafe HSR Layout Bengaluru breakfast menu",
+    "retrieved_at": "2026-11-21T10:15:34Z",
+    "domain": "tripadvisor.in",
+    "locality_match": "HSR Layout"
+  }
+]

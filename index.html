@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DukaanPulse — Grounded Local-Business Research to Action</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --card-hover: #172238;
+      --text: #f3f4f6;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 1rem 1.5rem;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: #0d1322;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active {
+      background: var(--card-bg);
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .screen { display: none; }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-ready { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-insufficient { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-info { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full-width { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #d1d5db;
+    }
+
+    input, textarea, select {
+      background: #0b111e;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #fff;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Live Progress */
+    .progress-box {
+      background: #0b111e;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+
+    .stage-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .stage-item.current { color: var(--accent); font-weight: 600; }
+    .stage-item.done { color: var(--success); }
+
+    .stage-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #374151;
+    }
+
+    .stage-item.current .stage-dot {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    .stage-item.done .stage-dot { background: var(--success); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      background: #1e293b;
+      color: var(--accent);
+      border: 1px solid #334155;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 0.2rem;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      background: var(--accent);
+      color: #0b111e;
+      border-color: var(--accent);
+    }
+
+    .finding-card {
+      background: #0e1626;
+      border: 1px solid #1f2c45;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .quote-block {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.9rem;
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .econ-box {
+      background: #0a1120;
+      border: 1px solid #25334d;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .econ-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .econ-metric {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .econ-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .econ-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 0.25rem;
+    }
+
+    .experiment-card {
+      border: 2px solid #6366f1;
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(17, 24, 39, 0.95) 100%);
+    }
+
+    .step-list {
+      list-style-type: decimal;
+      padding-left: 1.25rem;
+      margin: 0.75rem 0;
+    }
+
+    .step-list li {
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: #0d1527;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .metric-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .metric-highlight {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), #0d1527);
+    }
+
+    .metric-highlight .metric-value { color: var(--success); }
+
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    th {
+      background: #0a0f1d;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      color: #94a3b8;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #1a2333;
+      color: #e2e8f0;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      max-width: 650px;
+      width: 100%;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover { color: #fff; }
+
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .alert-warning {
+      background: var(--warning-bg);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">D</div>
+        <div>
+          <div class="brand-title">DukaanPulse</div>
+          <div class="brand-subtitle">Live, cited research-to-action for independent cafés</div>
+        </div>
+      </div>
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-btn active" id="tabSetup" onclick="showScreen('screenSetup')">1. Setup & Economics</button>
+        <button class="nav-btn" id="tabReport" onclick="showScreen('screenReport')" disabled>2. Evidence & Report</button>
+        <button class="nav-btn" id="tabTracker" onclick="showScreen('screenTracker')" disabled>3. Experiment Tracker</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main>
+
+    <!-- Error Alert Container -->
+    <div id="errorAlert" class="alert alert-danger" style="display: none;" role="alert">
+      <div id="errorText"></div>
+    </div>
+
+    <!-- SCREEN 1: Setup & Input -->
+    <section id="screenSetup" class="screen active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">1. Café Profile & Research Goal</div>
+          <span class="badge badge-info">You.com Live Cited Grounding</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+          Enter your café's location and what offer you wish to test. DukaanPulse retrieves public market evidence from You.com, evaluates your cost assumptions, and designs a low-risk, bounded experiment.
+        </p>
+
+        <!-- Quick Demo Scenarios Selector -->
+        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid #312e81; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: #818cf8; text-transform: uppercase;">Quick Demo Scenarios:</span>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e1b4b; color: #c7d2fe; border: 1px solid #4338ca;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #064e3b; color: #a7f3d0; border: 1px solid #059669;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #450a0a; color: #fecaca; border: 1px solid #dc2626;" onclick="loadScenario('loss_making_matcha')">Scenario 3: High-Cost Matcha (Negative Margin Warning)</button>
+        </div>
+
+        <form id="researchForm" onsubmit="handleFormSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="inputCategory">Business Category *</label>
+              <input type="text" id="inputCategory" required value="Cafe" placeholder="e.g. Cafe, Bakery">
+            </div>
+
+            <div class="form-group">
+              <label for="inputLocality">Locality / Neighborhood *</label>
+              <input type="text" id="inputLocality" required value="HSR Layout, Bengaluru" placeholder="e.g. HSR Layout, Sector 1">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="inputQuestion">Business Question to Research *</label>
+              <textarea id="inputQuestion" rows="2" required placeholder="What specific offer or decision do you want to test?">Should I test a weekday breakfast bundle within a budget of INR 2,000, using existing equipment?</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="inputBudget">Maximum Pilot Budget Ceiling (₹ INR) *</label>
+              <input type="number" id="inputBudget" min="100" max="1000000" step="50" required value="2000" onchange="syncEconomicsBudget()">
+            </div>
+
+            <div class="form-group">
+              <label for="inputConstraints">Operational Constraints</label>
+              <input type="text" id="inputConstraints" value="Existing kitchen equipment only, no new staff" placeholder="e.g. existing kitchen equipment only">
+            </div>
+          </div>
+
+          <!-- Section 1B: Owner Unit Economics Assumptions -->
+          <div class="econ-box" style="margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <h3 style="font-size: 1rem; color: #fff; font-weight: 700;">Owner-Entered Unit Economics (Assumptions)</h3>
+              <span class="badge badge-info">Deterministic Python Math</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              All costs below are strictly labeled as <em>Owner Assumptions</em>, distinct from web-retrieved market facts.
+            </p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="econPrice">Proposed Selling Price (₹/bundle) *</label>
+                <input type="number" id="econPrice" min="1" step="1" required value="179" oninput="liveUpdateEconomics()">
+              </div>
+              <div class="form-group">
+                <label for="econIng">Ingredient Cost (₹/bundle) *</label>
+                <input type="number" id="econIng" min="0" step="1" required value="50" oninput="liveUpdateEconomics()">
+              </div>
+              <div class="form-group">
+                <label for="econPkg">Packaging Cost (₹/bundle) *</label>
+                <input type="number" id="econPkg" min="0" step="1" required value="10" oninput="liveUpdateEconomics()">
+              </div>
+              <div class="form-group">
+                <label for="econOther">Other Variable Cost (₹/bundle)</label>
+                <input type="number" id="econOther" min="0" step="1" value="5" oninput="liveUpdateEconomics()">
+              </div>
+              <div class="form-group">
+                <label for="econSetup">One-Time Pilot Cost (₹) [Signage, test batch]</label>
+                <input type="number" id="econSetup" min="0" step="10" value="450" oninput="liveUpdateEconomics()">
+              </div>
+              <div class="form-group">
+                <label for="econQty">Planned Pilot Quantity (units)</label>
+                <input type="number" id="econQty" min="1" step="1" value="20" oninput="liveUpdateEconomics()">
+              </div>
+            </div>
+
+            <!-- Live Calculation Summary Card -->
+            <div class="econ-grid" id="liveEconCard">
+              <div class="econ-metric">
+                <div class="econ-title">Variable Cost / Order</div>
+                <div class="econ-val" id="liveVarCost">₹65.00</div>
+              </div>
+              <div class="econ-metric">
+                <div class="econ-title">Contribution / Order</div>
+                <div class="econ-val" style="color: var(--success);" id="liveContrib">₹114.00</div>
+              </div>
+              <div class="econ-metric">
+                <div class="econ-title">Gross Margin %</div>
+                <div class="econ-val" id="liveMargin">63.7%</div>
+              </div>
+              <div class="econ-metric">
+                <div class="econ-title">Break-Even on Setup</div>
+                <div class="econ-val" id="liveBreakEven">4 orders</div>
+              </div>
+            </div>
+
+            <div id="liveGuidanceBox" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7;">
+              FINANCIALLY VIABLE. Generates positive contribution of ₹114.00 per bundle (63.7% margin). 4 orders required to recover one-time setup cost.
+            </div>
+          </div>
+
+          <div style="margin-top: 1.75rem; display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
+            <button type="submit" class="btn btn-primary" id="btnSubmitResearch">
+              <span>Execute Live Research</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Live Research Progress -->
+    <section id="screenResearching" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Live Retrieval & Grounding in Progress</div>
+          <span class="badge badge-info" id="searchTimer">Elapsed: 0.0s</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Querying You.com live web index (max 3 focused queries), verifying evidence citations, and evaluating unit economics.
+        </p>
+
+        <div class="progress-box">
+          <div class="stage-item current" id="stage1">
+            <div class="stage-dot"></div>
+            <span>Validating merchant parameters and budget ceiling</span>
+          </div>
+          <div class="stage-item" id="stage2">
+            <div class="stage-dot"></div>
+            <span>Querying You.com search API (max 3 focused queries)</span>
+          </div>
+          <div class="stage-item" id="stage3">
+            <div class="stage-dot"></div>
+            <span>Normalizing source URLs and deduplicating evidence items</span>
+          </div>
+          <div class="stage-item" id="stage4">
+            <div class="stage-dot"></div>
+            <span>Executing grounded synthesis, deterministic economics & quote verification</span>
+          </div>
+          <div class="stage-item" id="stage5">
+            <div class="stage-dot"></div>
+            <span>Persisting verified report and evidence ledger into SQLite</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Research Report & Evidence Ledger -->
+    <section id="screenReport" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="reportHeaderTitle">Market Research & Economics Report</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="reportMetaInfo"></div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #e2e8f0; border: 1px solid #334155;" onclick="printSOPCard()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Staff SOP Card</span>
+            </button>
+            <span class="badge badge-ready" id="reportStatusBadge">Verified Grounded</span>
+          </div>
+        </div>
+
+        <!-- Stale Warning Banner (Dynamically shown if owner alters costs) -->
+        <div id="staleAdviceBanner" class="alert alert-warning" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <strong>Cost Assumptions Altered:</strong>
+            <span id="staleAdviceText">Previous advice is STALE. Costs changed.</span>
+          </div>
+        </div>
+
+        <!-- 1. Factual Observations with Evidence Chips -->
+        <h3 style="font-size: 1rem; color: #cbd5e1; margin-bottom: 0.75rem;">
+          1. Factual Market Observations (Click chip to inspect You.com excerpt)
+        </h3>
+        <div id="observationsContainer"></div>
+
+        <!-- 2. Unit Economics Summary -->
+        <div class="econ-box" style="margin: 1.5rem 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1rem; color: #fff; font-weight: 700;">2. Checked Unit Economics (Owner Assumptions)</h3>
+            <span class="badge badge-info" id="econStatusBadge">Calculated in Python</span>
+          </div>
+          <div class="econ-grid" id="reportEconGrid"></div>
+          <div id="reportEconGuidance" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem;"></div>
+
+          <!-- Stale Assumption Simulator Box -->
+          <div style="background: #0d1527; border: 1px dashed #38bdf8; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <strong style="color: #38bdf8; font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">See what happens if supplier ingredient costs surge</span>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+              <label for="simIngredientCost" style="font-size: 0.8rem;">Simulate Ingredient Cost (₹):</label>
+              <input type="number" id="simIngredientCost" value="130" style="width: 110px; padding: 0.35rem 0.5rem; font-size: 0.85rem;">
+              <button type="button" class="btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;" onclick="simulateCostChange()">Check Invalidation</button>
+              <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #94a3b8;" onclick="resetSimCost()">Reset to Original</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Material Unknowns -->
+        <div style="margin: 1.5rem 0;">
+          <h3 style="font-size: 1rem; color: #cbd5e1; margin-bottom: 0.5rem;">3. Material Unknowns & Information Gaps</h3>
+          <ul id="unknownsList" style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.9rem;"></ul>
+        </div>
+
+        <!-- 4. Tentative Hypothesis -->
+        <div style="margin: 1.5rem 0; background: #0b111e; border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 12px;">
+          <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+            4. Tentative Opportunity Hypothesis (Not Proven Demand)
+          </div>
+          <p id="hypothesisText" style="color: #f1f5f9; font-size: 0.95rem;"></p>
+        </div>
+
+        <!-- 5. Bounded Experiment Proposal -->
+        <div class="card experiment-card" id="experimentProposalBox">
+          <div class="card-header">
+            <div class="card-title" style="color: #818cf8;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              <span id="experimentTitle">Proposed Bounded Experiment</span>
+            </div>
+            <span class="badge badge-info" id="experimentBudgetBadge">Max Ceiling: ₹2,000</span>
+          </div>
+
+          <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem;">
+            <strong style="color: #f59e0b;">Pre-Spending Validation Step:</strong>
+            <div id="experimentValidationStep" style="color: #e2e8f0; margin-top: 0.2rem;"></div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Operational Steps:
+          </p>
+          <ol class="step-list" id="experimentSteps"></ol>
+
+          <div style="background: rgba(15, 23, 42, 0.7); padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; font-size: 0.85rem;">
+            <div style="font-weight: 600; color: #38bdf8; margin-bottom: 0.2rem;">Owner-Approved Success Target:</div>
+            <div id="experimentSuccessTarget" style="color: #cbd5e1;"></div>
+            <div style="font-weight: 600; color: #ef4444; margin-top: 0.5rem; margin-bottom: 0.2rem;">Stop / Revise Conditions:</div>
+            <ul id="experimentStopConditions" style="padding-left: 1.25rem; color: #fca5a5;"></ul>
+          </div>
+
+          <!-- Owner Approval CTA -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); max-width: 450px;">
+              By accepting, you lock this experiment and its snapshot of cost assumptions into SQLite storage and launch the measurement tracker.
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button type="button" class="btn" style="background: #1e293b; color: #e2e8f0; border: 1px solid #334155; font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
+              <button class="btn btn-success" id="btnAcceptExperiment" onclick="acceptExperiment()">
+                <span>Approve & Accept Experiment</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Limitations & Disclaimers -->
+        <div style="margin-top: 1.5rem;">
+          <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">Methodology Limitations</h4>
+          <ul id="limitationsList" style="padding-left: 1.25rem; color: #64748b; font-size: 0.8rem;"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Active Experiment & Outcome Tracker -->
+    <section id="screenTracker" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="trackerExpTitle">Active Business Experiment</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="trackerExpMeta"></div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #e2e8f0; border: 1px solid #334155;" onclick="printSOPCard()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Staff SOP</span>
+            </button>
+            <span class="badge badge-ready">In Progress</span>
+          </div>
+        </div>
+
+        <!-- Experiment Approved Assumptions Snapshot -->
+        <div style="background: #0d1527; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
+          <strong style="color: #38bdf8;">Approved Assumptions at Acceptance:</strong>
+          <div id="trackerAssumptions" style="color: #cbd5e1; margin-top: 0.25rem;"></div>
+        </div>
+
+        <!-- Financial KPI Dashboard -->
+        <div class="metric-grid">
+          <div class="metric-card">
+            <span class="metric-title">Test Orders</span>
+            <span class="metric-value" id="kpiOrders">0</span>
+            <span class="metric-sub">Cumulative test sales</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-title">Recorded Revenue</span>
+            <span class="metric-value" id="kpiRevenue">₹0.00</span>
+            <span class="metric-sub">Cash received</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-title">Recorded Variable Costs</span>
+            <span class="metric-value" id="kpiVariableCost">₹0.00</span>
+            <span class="metric-sub">Ingredients & packaging</span>
+          </div>
+
+          <div class="metric-card metric-highlight">
+            <span class="metric-title">Total Contribution</span>
+            <span class="metric-value" id="kpiContribution">₹0.00</span>
+            <span class="metric-sub">Revenue - Variable Cost (Gross Margin)</span>
+          </div>
+        </div>
+
+        <!-- Outcome Entry Form -->
+        <div style="background: #0d1527; border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 0.75rem;">Log Daily Test Measurement</h4>
+          <form id="outcomeForm" onsubmit="handleOutcomeSubmit(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: flex-end;">
+            <div class="form-group">
+              <label for="outDate">Date *</label>
+              <input type="date" id="outDate" required>
+            </div>
+            <div class="form-group">
+              <label for="outOrders">Orders *</label>
+              <input type="number" id="outOrders" min="0" required placeholder="e.g. 12">
+            </div>
+            <div class="form-group">
+              <label for="outRevenue">Revenue (₹) *</label>
+              <input type="number" id="outRevenue" min="0" step="0.5" required placeholder="e.g. 2148">
+            </div>
+            <div class="form-group">
+              <label for="outVarCost">Variable Cost (₹) *</label>
+              <input type="number" id="outVarCost" min="0" step="0.5" required placeholder="e.g. 720">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="outNotes">Operational Observations / Customer Reactions</label>
+              <input type="text" id="outNotes" placeholder="e.g. 10 customers chose cold brew combo, sold out by 9:30 AM">
+            </div>
+            <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-primary" id="btnSaveOutcome">
+                <span>Save Daily Measurement</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Outcome Historical Table -->
+        <h4 style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 0.75rem;">Experiment Measurement Ledger</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Orders</th>
+                <th>Revenue (₹)</th>
+                <th>Variable Cost (₹)</th>
+                <th>Contribution (₹)</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="outcomeTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                  No daily measurements recorded yet. Enter your first day's test figures above.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Evidence Inspector Modal -->
+  <div id="evidenceModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalEvidenceTitle">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeEvidenceModal()" aria-label="Close modal">&times;</button>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span class="chip" id="modalEvidenceBadge">E1</span>
+        <h3 id="modalEvidenceTitle" style="font-size: 1.1rem; color: #fff; font-weight: 700;"></h3>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
+        <div><strong>Source Query:</strong> <span id="modalEvidenceQuery" style="font-family: var(--mono); color: #cbd5e1;"></span></div>
+        <div><strong>Retrieval Timestamp:</strong> <span id="modalEvidenceRetrieved"></span></div>
+        <div><strong>Source Publication Date:</strong> <span id="modalEvidenceDate">Not reported</span></div>
+      </div>
+
+      <div style="background: #080d1a; border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 0.4rem;">
+          Retrieved Excerpt from You.com
+        </div>
+        <p id="modalEvidenceSnippet" style="color: #e2e8f0; font-size: 0.9rem; line-height: 1.5;"></p>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <a id="modalEvidenceLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+          <span>Visit Verified Source</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    DukaanPulse is powered by You.com live web retrieval. All observations require exact quoted citations. Managerial economics strictly reports contribution margin (revenue - variable costs).
+  </footer>
+
+  <script>
+    // Application State
+    let currentResearch = null;
+    let currentExperiment = null;
+    let evidenceMap = new Map();
+    let searchTimerInterval = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      const outDateInput = document.getElementById('outDate');
+      if (outDateInput) outDateInput.value = today;
+      liveUpdateEconomics();
+    });
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      if (screenId === 'screenSetup') document.getElementById('tabSetup').classList.add('active');
+      if (screenId === 'screenReport') document.getElementById('tabReport').classList.add('active');
+      if (screenId === 'screenTracker') document.getElementById('tabTracker').classList.add('active');
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorAlert');
+      const text = document.getElementById('errorText');
+      text.textContent = msg;
+      el.style.display = 'flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function clearError() {
+      document.getElementById('errorAlert').style.display = 'none';
+    }
+
+    function syncEconomicsBudget() {
+      liveUpdateEconomics();
+    }
+
+    function loadScenario(type) {
+      if (type === 'hsr_cafe') {
+        document.getElementById('inputCategory').value = 'Cafe';
+        document.getElementById('inputLocality').value = 'HSR Layout, Bengaluru';
+        document.getElementById('inputQuestion').value = 'Should I test a weekday breakfast bundle within a budget of INR 2,000, using existing equipment?';
+        document.getElementById('inputBudget').value = '2000';
+        document.getElementById('inputConstraints').value = 'Existing kitchen equipment only, no new staff';
+        document.getElementById('econPrice').value = '179';
+        document.getElementById('econIng').value = '50';
+        document.getElementById('econPkg').value = '10';
+        document.getElementById('econOther').value = '5';
+        document.getElementById('econSetup').value = '450';
+        document.getElementById('econQty').value = '20';
+      } else if (type === 'indiranagar_bakery') {
+        document.getElementById('inputCategory').value = 'Bakery';
+        document.getElementById('inputLocality').value = 'Indiranagar, Bengaluru';
+        document.getElementById('inputQuestion').value = 'Should I offer an artisanal morning croissant & drip coffee box for INR 199?';
+        document.getElementById('inputBudget').value = '1500';
+        document.getElementById('inputConstraints').value = 'Current oven capacity, morning prep from 6:30 AM';
+        document.getElementById('econPrice').value = '199';
+        document.getElementById('econIng').value = '60';
+        document.getElementById('econPkg').value = '15';
+        document.getElementById('econOther').value = '5';
+        document.getElementById('econSetup').value = '300';
+        document.getElementById('econQty').value = '15';
+      } else if (type === 'loss_making_matcha') {
+        document.getElementById('inputCategory').value = 'Cafe';
+        document.getElementById('inputLocality').value = 'Koramangala, Bengaluru';
+        document.getElementById('inputQuestion').value = 'Should I launch a promotional ceremonial matcha latte at INR 120?';
+        document.getElementById('inputBudget').value = '2500';
+        document.getElementById('inputConstraints').value = 'Imported ceremonial grade powder';
+        document.getElementById('econPrice').value = '120';
+        document.getElementById('econIng').value = '140';
+        document.getElementById('econPkg').value = '15';
+        document.getElementById('econOther').value = '5';
+        document.getElementById('econSetup').value = '600';
+        document.getElementById('econQty').value = '20';
+      }
+      liveUpdateEconomics();
+    }
+
+    // Live Deterministic Economics calculation on setup screen
+    function liveUpdateEconomics() {
+      const price = parseFloat(document.getElementById('econPrice').value) || 0;
+      const ing = parseFloat(document.getElementById('econIng').value) || 0;
+      const pkg = parseFloat(document.getElementById('econPkg').value) || 0;
+      const other = parseFloat(document.getElementById('econOther').value) || 0;
+      const setup = parseFloat(document.getElementById('econSetup').value) || 0;
+      const budget = parseFloat(document.getElementById('inputBudget').value) || 2000;
+      const qty = parseInt(document.getElementById('econQty').value, 10) || 1;
+
+      const varCost = ing + pkg + other;
+      const contrib = price - varCost;
+      const margin = price > 0 ? ((contrib / price) * 100).toFixed(1) : '0.0';
+
+      document.getElementById('liveVarCost').textContent = `₹${varCost.toFixed(2)}`;
+      const contribEl = document.getElementById('liveContrib');
+      contribEl.textContent = `₹${contrib.toFixed(2)}`;
+      document.getElementById('liveMargin').textContent = `${margin}%`;
+
+      const breakEvenEl = document.getElementById('liveBreakEven');
+      const guidanceBox = document.getElementById('liveGuidanceBox');
+
+      if (contrib > 0) {
+        contribEl.style.color = 'var(--success)';
+        const breakEven = setup > 0 ? Math.ceil(setup / contrib) : 0;
+        breakEvenEl.textContent = `${breakEven} orders`;
+
+        const totalEst = setup + (qty * varCost);
+        if (totalEst > budget) {
+          guidanceBox.style.background = 'rgba(239, 68, 68, 0.12)';
+          guidanceBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+          guidanceBox.style.color = '#fca5a5';
+          guidanceBox.textContent = `OVER BUDGET. Estimated pilot cost (₹${totalEst.toFixed(2)}) exceeds budget ceiling of ₹${budget.toFixed(2)}. Reduce planned batch size or setup costs.`;
+        } else {
+          guidanceBox.style.background = 'rgba(16, 185, 129, 0.12)';
+          guidanceBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+          guidanceBox.style.color = '#6ee7b7';
+          guidanceBox.textContent = `FINANCIALLY VIABLE. Generates positive contribution of ₹${contrib.toFixed(2)}/order (${margin}% margin). ${breakEven} orders cover setup expenses.`;
+        }
+      } else {
+        contribEl.style.color = 'var(--danger)';
+        breakEvenEl.textContent = 'None (Negative)';
+        guidanceBox.style.background = 'rgba(239, 68, 68, 0.12)';
+        guidanceBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+        guidanceBox.style.color = '#fca5a5';
+        guidanceBox.textContent = `DO NOT LAUNCH. Unit variable costs (₹${varCost.toFixed(2)}) equal or exceed selling price (₹${price.toFixed(2)}). Every order loses money.`;
+      }
+    }
+
+    function setStage(index) {
+      for (let i = 1; i <= 5; i++) {
+        const item = document.getElementById(`stage${i}`);
+        if (!item) continue;
+        item.classList.remove('current', 'done');
+        if (i < index) item.classList.add('done');
+        if (i === index) item.classList.add('current');
+      }
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      clearError();
+
+      const category = document.getElementById('inputCategory').value.trim();
+      const locality = document.getElementById('inputLocality').value.trim();
+      const question = document.getElementById('inputQuestion').value.trim();
+      const budget = parseFloat(document.getElementById('inputBudget').value);
+      const constraints = document.getElementById('inputConstraints').value.trim();
+
+      const economics = {
+        selling_price: parseFloat(document.getElementById('econPrice').value),
+        ingredient_cost: parseFloat(document.getElementById('econIng').value),
+        packaging_cost: parseFloat(document.getElementById('econPkg').value) || 0.0,
+        other_variable_cost: parseFloat(document.getElementById('econOther').value) || 0.0,
+        one_time_pilot_cost: parseFloat(document.getElementById('econSetup').value) || 0.0,
+        max_pilot_budget: budget,
+        planned_quantity: parseInt(document.getElementById('econQty').value, 10) || 20,
+        operational_constraints: constraints
+      };
+
+      if (!category || !locality || !question || isNaN(budget) || budget <= 0) {
+        showError('Please complete all required fields with valid values.');
+        return;
+      }
+
+      showScreen('screenResearching');
+      const submitBtn = document.getElementById('btnSubmitResearch');
+      submitBtn.disabled = true;
+
+      const startTime = performance.now();
+      setStage(1);
+
+      if (searchTimerInterval) clearInterval(searchTimerInterval);
+      searchTimerInterval = setInterval(() => {
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+        document.getElementById('searchTimer').textContent = `Elapsed: ${elapsed}s`;
+      }, 100);
+
+      try {
+        setStage(2);
+        const res = await fetch('/api/research', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category, locality, question, budget, constraints, economics })
+        });
+
+        setStage(4);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || `Server returned error status ${res.status}`);
+        }
+
+        setStage(5);
+        currentResearch = data;
+        renderReport(data);
+
+        document.getElementById('tabReport').disabled = false;
+        showScreen('screenReport');
+
+      } catch (err) {
+        showError(err.message || 'An unexpected error occurred during research.');
+        showScreen('screenSetup');
+      } finally {
+        clearInterval(searchTimerInterval);
+        submitBtn.disabled = false;
+      }
+    }
+
+    function renderReport(data) {
+      evidenceMap.clear();
+      if (data.evidence) {
+        data.evidence.forEach(e => evidenceMap.set(e.evidence_id, e));
+      }
+
+      const report = data.report;
+      document.getElementById('reportHeaderTitle').textContent = `${data.category} in ${data.locality}`;
+      document.getElementById('reportMetaInfo').textContent = `Research ID: ${data.research_id} | Created: ${new Date(data.created_at).toLocaleString()}`;
+
+      const statusBadge = document.getElementById('reportStatusBadge');
+      if (report.status === 'ready') {
+        statusBadge.className = 'badge badge-ready';
+        statusBadge.textContent = 'Verified Grounded';
+        document.getElementById('experimentProposalBox').style.display = 'block';
+      } else if (report.status === 'needs_owner_input') {
+        statusBadge.className = 'badge badge-insufficient';
+        statusBadge.textContent = 'Needs Cost Revision';
+        document.getElementById('experimentProposalBox').style.display = 'block';
+      } else {
+        statusBadge.className = 'badge badge-insufficient';
+        statusBadge.textContent = 'Insufficient Evidence';
+        document.getElementById('experimentProposalBox').style.display = 'none';
+      }
+
+      // 1. Observations
+      const obsContainer = document.getElementById('observationsContainer');
+      obsContainer.innerHTML = '';
+      if (report.observations && report.observations.length > 0) {
+        report.observations.forEach(obs => {
+          const card = document.createElement('div');
+          card.className = 'finding-card';
+
+          const titleRow = document.createElement('div');
+          titleRow.style.display = 'flex';
+          titleRow.style.justifyContent = 'space-between';
+          titleRow.style.alignItems = 'flex-start';
+          titleRow.style.gap = '0.5rem';
+
+          const claimSpan = document.createElement('div');
+          claimSpan.style.fontWeight = '600';
+          claimSpan.style.color = '#f8fafc';
+          claimSpan.textContent = obs.claim;
+
+          const chipsSpan = document.createElement('div');
+          obs.evidence_ids.forEach(eid => {
+            const chip = document.createElement('button');
+            chip.className = 'chip';
+            chip.textContent = eid;
+            chip.onclick = () => openEvidenceModal(eid);
+            chipsSpan.appendChild(chip);
+          });
+
+          titleRow.appendChild(claimSpan);
+          titleRow.appendChild(chipsSpan);
+          card.appendChild(titleRow);
+
+          if (obs.supporting_quotes) {
+            obs.supporting_quotes.forEach(sq => {
+              const qBlock = document.createElement('div');
+              qBlock.className = 'quote-block';
+              qBlock.textContent = `"${sq.quote}"`;
+              card.appendChild(qBlock);
+            });
+          }
+
+          obsContainer.appendChild(card);
+        });
+      } else {
+        obsContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.9rem;">No verified observations produced.</div>';
+      }
+
+      // 2. Economics Card in Report
+      const econGrid = document.getElementById('reportEconGrid');
+      econGrid.innerHTML = '';
+      const econ = report.economics;
+      if (econ) {
+        const metrics = [
+          { title: 'Variable Cost / Order', val: `₹${econ.variable_cost_per_order.toFixed(2)}` },
+          { title: 'Contribution / Order', val: `₹${econ.contribution_per_order.toFixed(2)}`, color: econ.contribution_per_order > 0 ? 'var(--success)' : 'var(--danger)' },
+          { title: 'Gross Margin %', val: `${econ.gross_margin_pct || 0}%` },
+          { title: 'Break-Even on Setup', val: econ.orders_to_cover_setup_cost !== null ? `${econ.orders_to_cover_setup_cost} orders` : 'None (Negative)' }
+        ];
+
+        metrics.forEach(m => {
+          const div = document.createElement('div');
+          div.className = 'econ-metric';
+          const t = document.createElement('div');
+          t.className = 'econ-title';
+          t.textContent = m.title;
+          const v = document.createElement('div');
+          v.className = 'econ-val';
+          if (m.color) v.style.color = m.color;
+          v.textContent = m.val;
+          div.appendChild(t);
+          div.appendChild(v);
+          econGrid.appendChild(div);
+        });
+
+        const gBox = document.getElementById('reportEconGuidance');
+        gBox.textContent = econ.guidance;
+        if (econ.is_viable) {
+          gBox.style.background = 'rgba(16, 185, 129, 0.12)';
+          gBox.style.color = '#6ee7b7';
+          gBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+          document.getElementById('btnAcceptExperiment').disabled = false;
+        } else {
+          gBox.style.background = 'rgba(239, 68, 68, 0.12)';
+          gBox.style.color = '#fca5a5';
+          gBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+          document.getElementById('btnAcceptExperiment').disabled = true;
+        }
+      }
+
+      // 3. Unknowns
+      const unknownsList = document.getElementById('unknownsList');
+      unknownsList.innerHTML = '';
+      (report.unknowns || []).forEach(u => {
+        const li = document.createElement('li');
+        li.textContent = u;
+        unknownsList.appendChild(li);
+      });
+
+      // 4. Hypothesis
+      document.getElementById('hypothesisText').textContent = report.hypothesis || 'None';
+
+      // 5. Experiment
+      if (report.experiment) {
+        const exp = report.experiment;
+        document.getElementById('experimentTitle').textContent = exp.title;
+        document.getElementById('experimentBudgetBadge').textContent = `Ceiling: ₹${exp.budget_ceiling.toLocaleString()}`;
+        document.getElementById('experimentValidationStep').textContent = exp.validation_step || 'Verify demand with customers before spending.';
+
+        const stepsOl = document.getElementById('experimentSteps');
+        stepsOl.innerHTML = '';
+        exp.steps.forEach(s => {
+          const li = document.createElement('li');
+          li.textContent = s;
+          stepsOl.appendChild(li);
+        });
+
+        document.getElementById('experimentSuccessTarget').textContent = exp.success_criterion;
+
+        const stopUl = document.getElementById('experimentStopConditions');
+        stopUl.innerHTML = '';
+        (exp.stop_conditions || []).forEach(sc => {
+          const li = document.createElement('li');
+          li.textContent = sc;
+          stopUl.appendChild(li);
+        });
+      }
+
+      // 6. Limitations
+      const limitsList = document.getElementById('limitationsList');
+      limitsList.innerHTML = '';
+      (report.limitations || []).forEach(l => {
+        const li = document.createElement('li');
+        li.textContent = l;
+        limitsList.appendChild(li);
+      });
+    }
+
+    async function simulateCostChange() {
+      if (!currentResearch) return;
+      const newIng = parseFloat(document.getElementById('simIngredientCost').value) || 0;
+      const price = parseFloat(document.getElementById('econPrice').value) || 179;
+      const pkg = parseFloat(document.getElementById('econPkg').value) || 10;
+      const other = parseFloat(document.getElementById('econOther').value) || 5;
+      const setup = parseFloat(document.getElementById('econSetup').value) || 450;
+      const budget = parseFloat(document.getElementById('inputBudget').value) || 2000;
+
+      const simEcon = {
+        selling_price: price,
+        ingredient_cost: newIng,
+        packaging_cost: pkg,
+        other_variable_cost: other,
+        one_time_pilot_cost: setup,
+        max_pilot_budget: budget,
+        planned_quantity: 20
+      };
+
+      try {
+        const res = await fetch('/api/economics/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(simEcon)
+        });
+        const data = await res.json();
+
+        const banner = document.getElementById('staleAdviceBanner');
+        const bannerText = document.getElementById('staleAdviceText');
+        banner.style.display = 'flex';
+
+        if (!data.is_viable) {
+          banner.className = 'alert alert-danger';
+          bannerText.textContent = `CRITICAL: Supplier cost jump to ₹${newIng} makes unit contribution NEGATIVE (₹${data.contribution_per_order}/order). Previously generated experiment is now STALE and must NOT be launched.`;
+          document.getElementById('btnAcceptExperiment').disabled = true;
+        } else {
+          banner.className = 'alert alert-warning';
+          bannerText.textContent = `NOTICE: Ingredient cost changed to ₹${newIng}. Unit contribution reduced to ₹${data.contribution_per_order}/order (${data.gross_margin_pct}% margin). Break-even now requires ${data.orders_to_cover_setup_cost} orders.`;
+        }
+      } catch (e) {
+        showError("Failed to re-calculate simulated economics");
+      }
+    }
+
+    function resetSimCost() {
+      document.getElementById('simIngredientCost').value = document.getElementById('econIng').value;
+      document.getElementById('staleAdviceBanner').style.display = 'none';
+      document.getElementById('btnAcceptExperiment').disabled = false;
+    }
+
+    function printSOPCard() {
+      if (!currentResearch || !currentResearch.report || !currentResearch.report.experiment) {
+        alert("Please run research first to generate an experiment.");
+        return;
+      }
+      const exp = currentResearch.report.experiment;
+      const printWindow = window.open('', '_blank', 'width=800,height=700');
+      const stepsHtml = exp.steps.map(s => `<li>[ ] ${s}</li>`).join('');
+      const stopHtml = (exp.stop_conditions || []).map(sc => `<li>⚠️ ${sc}</li>`).join('');
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Staff SOP Experiment Card - DukaanPulse</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #111; line-height: 1.5; }
+            .box { border: 2px solid #000; padding: 1.5rem; border-radius: 8px; }
+            h1 { font-size: 1.4rem; margin-top: 0; }
+            .badge { display: inline-block; padding: 4px 8px; background: #eee; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+            ul, ol { padding-left: 1.25rem; }
+            li { margin-bottom: 0.5rem; }
+            table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+            th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div style="margin-bottom: 1rem;">
+            <button onclick="window.print()" style="padding: 8px 16px; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
+          </div>
+          <div class="box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge">DUKAANPULSE STAFF EXPERIMENT CARD</span>
+              <span><strong>Budget Cap:</strong> ₹${exp.budget_ceiling}</span>
+            </div>
+            <h1>${exp.title}</h1>
+            <p><strong>Locality:</strong> ${currentResearch.locality} | <strong>Category:</strong> ${currentResearch.category}</p>
+            <hr/>
+            <h3>1. Pre-Spending Validation Step:</h3>
+            <p>${exp.validation_step}</p>
+            <h3>2. Kitchen & Staff Action Checklist:</h3>
+            <ul style="list-style-type: none; padding-left: 0;">${stepsHtml}</ul>
+            <h3>3. Success Target:</h3>
+            <p>${exp.success_criterion}</p>
+            <h3>4. Stop / Abort Conditions:</h3>
+            <ul style="list-style-type: none; padding-left: 0; color: #b91c1c;">${stopHtml}</ul>
+            <h3>5. Daily Order Logging Log:</h3>
+            <table>
+              <thead>
+                <tr><th>Day</th><th>Date</th><th>Orders Sold</th><th>Revenue (₹)</th><th>Ingredient Waste / Notes</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Day 1</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>Day 2</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>Day 3</td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+
+    function openEvidenceModal(evidenceId) {
+      const item = evidenceMap.get(evidenceId);
+      if (!item) return;
+
+      document.getElementById('modalEvidenceBadge').textContent = item.evidence_id;
+      document.getElementById('modalEvidenceTitle').textContent = item.title || 'Source Evidence';
+      document.getElementById('modalEvidenceQuery').textContent = item.query;
+      document.getElementById('modalEvidenceRetrieved').textContent = new Date(item.retrieved_at).toLocaleString();
+      document.getElementById('modalEvidenceDate').textContent = item.source_date || 'Not explicitly reported';
+      document.getElementById('modalEvidenceSnippet').textContent = item.snippet;
+
+      const linkEl = document.getElementById('modalEvidenceLink');
+      if (item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'))) {
+        linkEl.href = item.url;
+        linkEl.style.display = 'inline-flex';
+      } else {
+        linkEl.style.display = 'none';
+      }
+
+      document.getElementById('evidenceModal').classList.add('active');
+    }
+
+    function closeEvidenceModal() {
+      document.getElementById('evidenceModal').classList.remove('active');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeEvidenceModal();
+    });
+
+    async function acceptExperiment() {
+      if (!currentResearch) return;
+      clearError();
+
+      const btn = document.getElementById('btnAcceptExperiment');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/experiments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ research_id: currentResearch.research_id })
+        });
+        const expData = await res.json();
+        if (!res.ok) {
+          throw new Error(expData.detail || 'Failed to accept experiment');
+        }
+
+        currentExperiment = expData;
+        renderTracker(expData);
+
+        document.getElementById('tabTracker').disabled = false;
+        showScreen('screenTracker');
+
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderTracker(exp) {
+      document.getElementById('trackerExpTitle').textContent = exp.title;
+      document.getElementById('trackerExpMeta').textContent = `Experiment ID: ${exp.id} | Budget Ceiling: ₹${exp.budget_ceiling} | Created: ${new Date(exp.created_at).toLocaleDateString()}`;
+
+      // Show approved assumptions snapshot
+      const snap = exp.assumptions_snapshot;
+      if (snap && snap.selling_price) {
+        document.getElementById('trackerAssumptions').textContent =
+          `Selling Price: ₹${snap.selling_price} | Ingredient Cost: ₹${snap.ingredient_cost} | Packaging: ₹${snap.packaging_cost || 0} | Other: ₹${snap.other_variable_cost || 0} | Pilot Setup: ₹${snap.one_time_pilot_cost || 0}`;
+      } else {
+        document.getElementById('trackerAssumptions').textContent = `Budget Ceiling: ₹${exp.budget_ceiling}`;
+      }
+
+      document.getElementById('kpiOrders').textContent = exp.total_orders;
+      document.getElementById('kpiRevenue').textContent = `₹${exp.total_revenue.toLocaleString()}`;
+      document.getElementById('kpiVariableCost').textContent = `₹${exp.total_variable_cost.toLocaleString()}`;
+      document.getElementById('kpiContribution').textContent = `₹${exp.total_contribution.toLocaleString()}`;
+
+      const tbody = document.getElementById('outcomeTableBody');
+      tbody.innerHTML = '';
+
+      if (exp.measurements && exp.measurements.length > 0) {
+        exp.measurements.forEach(m => {
+          const tr = document.createElement('tr');
+
+          const tdDate = document.createElement('td');
+          tdDate.textContent = m.date;
+          const tdOrders = document.createElement('td');
+          tdOrders.textContent = m.orders;
+          const tdRev = document.createElement('td');
+          tdRev.textContent = `₹${m.revenue.toLocaleString()}`;
+          const tdCost = document.createElement('td');
+          tdCost.textContent = `₹${m.variable_cost.toLocaleString()}`;
+          const tdContrib = document.createElement('td');
+          tdContrib.style.fontWeight = '700';
+          tdContrib.style.color = 'var(--success)';
+          tdContrib.textContent = `₹${m.contribution.toLocaleString()}`;
+          const tdNotes = document.createElement('td');
+          tdNotes.textContent = m.notes || '—';
+
+          tr.appendChild(tdDate);
+          tr.appendChild(tdOrders);
+          tr.appendChild(tdRev);
+          tr.appendChild(tdCost);
+          tr.appendChild(tdContrib);
+          tr.appendChild(tdNotes);
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No daily measurements recorded yet. Enter your first day's test figures above.</td></tr>`;
+      }
+    }
+
+    async function handleOutcomeSubmit(e) {
+      e.preventDefault();
+      if (!currentExperiment) return;
+      clearError();
+
+      const date = document.getElementById('outDate').value;
+      const orders = parseInt(document.getElementById('outOrders').value, 10);
+      const revenue = parseFloat(document.getElementById('outRevenue').value);
+      const variable_cost = parseFloat(document.getElementById('outVarCost').value);
+      const notes = document.getElementById('outNotes').value.trim();
+
+      if (isNaN(orders) || isNaN(revenue) || isNaN(variable_cost)) {
+        showError('Please enter valid numeric figures for orders, revenue, and costs.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveOutcome');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/experiments/${currentExperiment.id}/outcome`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date, orders, revenue, variable_cost, notes })
+        });
+        const updated = await res.json();
+        if (!res.ok) {
+          throw new Error(updated.detail || 'Failed to record outcome');
+        }
+
+        currentExperiment = updated;
+        renderTracker(updated);
+
+        document.getElementById('outOrders').value = '';
+        document.getElementById('outRevenue').value = '';
+        document.getElementById('outVarCost').value = '';
+        document.getElementById('outNotes').value = '';
+
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

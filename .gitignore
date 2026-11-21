@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Environment and Secrets
+.env
+*.env
+!.env.example
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Operating System & IDEs
+.DS_Store
+.idea/
+.vscode/
+*.swp
