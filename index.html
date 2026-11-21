@@ -101,13 +101,29 @@
       color: #FFFFFF;
       font-size: 1.25rem;
       box-shadow: 0 2px 6px rgba(15, 118, 110, 0.25);
+      transition: transform 0.2s ease;
+    }
+
+    .brand-icon:hover {
+      transform: scale(1.05);
     }
 
     .brand-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text);
+      letter-spacing: -0.025em;
+      background: linear-gradient(120deg, #0F172A 0%, #0F766E 35%, #059669 50%, #0F766E 65%, #0F172A 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleShimmer 4s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes titleShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .brand-subtitle {
@@ -340,33 +356,196 @@
       cursor: not-allowed;
     }
 
-    /* Live Progress */
+    /* Live Progress & Loading Hero */
+    .loading-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .loading-radar-container {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .loading-brand-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      z-index: 2;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .loading-radar-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-radar-ring.ring-1 {
+      width: 52px;
+      height: 52px;
+      animation: radarRipple 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    }
+
+    .loading-radar-ring.ring-2 {
+      width: 52px;
+      height: 52px;
+      animation: radarRipple 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 0.7s;
+    }
+
+    .loading-radar-ring.ring-3 {
+      width: 52px;
+      height: 52px;
+      animation: radarRipple 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.4s;
+    }
+
+    @keyframes radarRipple {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.85;
+      }
+      100% {
+        transform: scale(2.1);
+        opacity: 0;
+      }
+    }
+
+    .loading-animated-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #0F172A 0%, #0F766E 30%, #059669 50%, #F59E0B 70%, #0F766E 90%, #0F172A 100%);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulseTitleGradient 3.5s ease-in-out infinite alternate;
+      margin-bottom: 0.35rem;
+    }
+
+    @keyframes pulseTitleGradient {
+      0% {
+        background-position: 0% 50%;
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+      100% {
+        background-position: 100% 50%;
+        transform: scale(1);
+      }
+    }
+
+    .loading-subtitle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .live-dot-pulse {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* Fast Animated Progress Bar */
+    .loading-bar-track {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0F766E 0%, #0D9488 50%, #F59E0B 100%);
+      border-radius: 9999px;
+      transition: width 0.35s ease;
+      box-shadow: 0 0 10px rgba(15, 118, 110, 0.4);
+    }
+
     .progress-box {
       background: #F8FAFC;
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 1.5rem;
-      font-family: var(--mono);
-      font-size: 0.85rem;
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font);
+      font-size: 0.88rem;
       color: var(--text);
     }
 
     .stage-item {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 0.75rem;
-      margin-bottom: 0.75rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      margin-bottom: 0.35rem;
       color: var(--text-muted);
+      transition: all 0.2s ease;
     }
 
-    .stage-item.current { color: var(--primary); font-weight: 600; }
-    .stage-item.done { color: var(--primary); font-weight: 600; }
+    .stage-item.current {
+      background: #F0FDFA;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .stage-item.done {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .stage-left {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
 
     .stage-dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #CBD5E1;
+      flex-shrink: 0;
     }
 
     .stage-item.current .stage-dot {
@@ -375,7 +554,25 @@
       animation: pulse 1.5s infinite;
     }
 
-    .stage-item.done .stage-dot { background: var(--primary); }
+    .stage-item.done .stage-dot {
+      background: var(--primary);
+    }
+
+    .stage-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .stage-item.current .stage-time {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .stage-item.done .stage-time {
+      color: var(--primary);
+      font-weight: 600;
+    }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
@@ -799,37 +996,75 @@
 
     <!-- SCREEN 2: Live Research Progress -->
     <section id="screenResearching" class="screen">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Live Retrieval & Grounding in Progress</div>
-          <span class="badge badge-info" id="searchTimer">Elapsed: 0.0s</span>
+      <div class="card" style="text-align: center; padding: 2.5rem 1.75rem;">
+        
+        <!-- Animated Pulse Radar & App Title -->
+        <div class="loading-hero">
+          <div class="loading-radar-container">
+            <div class="loading-radar-ring ring-1"></div>
+            <div class="loading-radar-ring ring-2"></div>
+            <div class="loading-radar-ring ring-3"></div>
+            <div class="loading-brand-icon">
+              <span>D</span>
+            </div>
+          </div>
+          <h2 class="loading-animated-title">DukaanPulse</h2>
+          <p class="loading-subtitle">
+            <span class="live-dot-pulse"></span>
+            <span>Live Market Intelligence & Unit Economics Engine</span>
+          </p>
         </div>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Querying You.com live web index (max 3 focused queries), verifying evidence citations, and evaluating unit economics.
-        </p>
 
-        <div class="progress-box">
+        <!-- Fast Animated Progress Bar -->
+        <div style="max-width: 650px; margin: 1.75rem auto 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
+            <span style="font-weight: 600; color: var(--text);" id="progressStatusText">Starting market research pipeline...</span>
+            <span class="badge badge-info" id="searchTimer" style="font-family: var(--mono); font-size: 0.8rem;">0.0s</span>
+          </div>
+          <div class="loading-bar-track">
+            <div class="loading-bar-fill" id="researchProgressBar" style="width: 15%;"></div>
+          </div>
+        </div>
+
+        <!-- 5-Stage Fast Progress Stepper -->
+        <div class="progress-box" style="max-width: 650px; margin: 1.25rem auto 0; text-align: left;">
           <div class="stage-item current" id="stage1">
-            <div class="stage-dot"></div>
-            <span>Validating merchant parameters and budget ceiling</span>
+            <div class="stage-left">
+              <div class="stage-dot"></div>
+              <span class="stage-label" id="stageLabel1">1. Validating merchant parameters & budget ceiling</span>
+            </div>
+            <span class="stage-time" id="stageTime1">Active</span>
           </div>
           <div class="stage-item" id="stage2">
-            <div class="stage-dot"></div>
-            <span>Querying You.com search API (max 3 focused queries)</span>
+            <div class="stage-left">
+              <div class="stage-dot"></div>
+              <span class="stage-label" id="stageLabel2">2. Querying You.com live web index (concurrent searches)</span>
+            </div>
+            <span class="stage-time" id="stageTime2">Waiting</span>
           </div>
           <div class="stage-item" id="stage3">
-            <div class="stage-dot"></div>
-            <span>Normalizing source URLs and deduplicating evidence items</span>
+            <div class="stage-left">
+              <div class="stage-dot"></div>
+              <span class="stage-label" id="stageLabel3">3. Normalizing source URLs & deduplicating evidence items</span>
+            </div>
+            <span class="stage-time" id="stageTime3">Waiting</span>
           </div>
           <div class="stage-item" id="stage4">
-            <div class="stage-dot"></div>
-            <span>Executing grounded synthesis, deterministic economics & quote verification</span>
+            <div class="stage-left">
+              <div class="stage-dot"></div>
+              <span class="stage-label" id="stageLabel4">4. Grounded AI synthesis & quote verification</span>
+            </div>
+            <span class="stage-time" id="stageTime4">Waiting</span>
           </div>
           <div class="stage-item" id="stage5">
-            <div class="stage-dot"></div>
-            <span>Persisting verified report and evidence ledger into SQLite</span>
+            <div class="stage-left">
+              <div class="stage-dot"></div>
+              <span class="stage-label" id="stageLabel5">5. Persisting verified findings & SQLite experiment ledger</span>
+            </div>
+            <span class="stage-time" id="stageTime5">Waiting</span>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -1230,13 +1465,29 @@
       }
     }
 
-    function setStage(index) {
+    function setStage(index, progressPct, statusText) {
       for (let i = 1; i <= 5; i++) {
         const item = document.getElementById(`stage${i}`);
+        const timeEl = document.getElementById(`stageTime${i}`);
         if (!item) continue;
         item.classList.remove('current', 'done');
-        if (i < index) item.classList.add('done');
-        if (i === index) item.classList.add('current');
+        if (i < index) {
+          item.classList.add('done');
+          if (timeEl) timeEl.textContent = 'Done ✓';
+        } else if (i === index) {
+          item.classList.add('current');
+          if (timeEl) timeEl.textContent = 'Active';
+        } else {
+          if (timeEl) timeEl.textContent = 'Waiting';
+        }
+      }
+      const progressBar = document.getElementById('researchProgressBar');
+      if (progressBar && progressPct !== undefined) {
+        progressBar.style.width = `${progressPct}%`;
+      }
+      const progressText = document.getElementById('progressStatusText');
+      if (progressText && statusText) {
+        progressText.textContent = statusText;
       }
     }
 
@@ -1271,38 +1522,55 @@
       submitBtn.disabled = true;
 
       const startTime = performance.now();
-      setStage(1);
+      setStage(1, 15, 'Validating merchant parameters & budget ceiling...');
+
+      const t1 = setTimeout(() => setStage(2, 40, 'Querying You.com live web index (concurrent searches)...'), 250);
+      const t2 = setTimeout(() => setStage(3, 65, 'Normalizing source URLs & deduplicating evidence items...'), 650);
+      const t3 = setTimeout(() => setStage(4, 85, 'Executing grounded AI synthesis & quote verification...'), 1100);
 
       if (searchTimerInterval) clearInterval(searchTimerInterval);
       searchTimerInterval = setInterval(() => {
         const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
-        document.getElementById('searchTimer').textContent = `Elapsed: ${elapsed}s`;
+        document.getElementById('searchTimer').textContent = `${elapsed}s`;
       }, 100);
 
       try {
-        setStage(2);
         const res = await fetch('/api/research', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ category, locality, question, budget, constraints, economics })
         });
 
-        setStage(4);
         const data = await res.json();
 
         if (!res.ok) {
           throw new Error(data.detail || `Server returned error status ${res.status}`);
         }
 
-        setStage(5);
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        setStage(5, 100, 'Persisting verified findings to SQLite ledger...');
+
         currentResearch = data;
         renderReport(data);
 
         document.getElementById('tabReport').disabled = false;
-        showScreen('screenReport');
+        setTimeout(() => {
+          showScreen('screenReport');
+        }, 220);
 
       } catch (err) {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
         showError(err.message || 'An unexpected error occurred during research.');
+        showScreen('screenSetup');
+      } finally {
+        clearInterval(searchTimerInterval);
+        submitBtn.disabled = false;
+      }
+    }
         showScreen('screenSetup');
       } finally {
         clearInterval(searchTimerInterval);

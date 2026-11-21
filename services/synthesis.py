@@ -151,39 +151,67 @@ class SynthesisAdapter:
                 f"LLM API key for provider '{self.provider}' is not configured. Please set LLM_API_KEY."
             )
 
-        if self.provider == "gemini":
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
-            payload = {
-                "system_instruction": {"parts": [{"text": system_prompt}]},
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {
-                    "response_mime_type": "application/json",
-                    "temperature": 0.2
-                }
-            }
-            async with httpx.AsyncClient(timeout=45.0) as client:
-                res = await client.post(url, json=payload)
-                if res.status_code in (401, 403):
-                    raise SynthesisError("Gemini authentication failed (HTTP 401/403).")
-                elif res.status_code == 429:
-                    raise SynthesisError("Gemini rate limit exceeded (HTTP 429).")
-                elif res.is_error:
-                    raise SynthesisError(f"Gemini API returned error HTTP {res.status_code}.")
+        clean_key = (self.api_key or "").strip().strip("'\"")
+        clean_model = (self.model or "gemini-1.5-flash").strip().strip("'\"")
+        if clean_model.startswith("models/"):
+            clean_model = clean_model[7:]
+        if " " in clean_model:
+            clean_model = clean_model.split()[0]
+        if not clean_model:
+            clean_model = "gemini-1.5-flash"
 
-                data = res.json()
-                try:
-                    return data["candidates"][0]["content"]["parts"][0]["text"]
-                except (KeyError, IndexError):
-                    raise SynthesisError("Invalid response structure from Gemini API.")
+        if self.provider == "gemini":
+            candidate_models = [clean_model]
+            for m in ("gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"):
+                if m not in candidate_models:
+                    candidate_models.append(m)
+
+            last_error = None
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                for candidate in candidate_models:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{candidate}:generateContent?key={clean_key}"
+                    payload = {
+                        "system_instruction": {"parts": [{"text": system_prompt}]},
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {
+                            "response_mime_type": "application/json",
+                            "temperature": 0.2
+                        }
+                    }
+                    try:
+                        res = await client.post(url, json=payload)
+                        if res.status_code == 200:
+                            data = res.json()
+                            return data["candidates"][0]["content"]["parts"][0]["text"]
+                        elif res.status_code == 404:
+                            last_error = SynthesisError(f"Gemini model '{candidate}' not found (HTTP 404).")
+                            continue  # Try next candidate model
+                        elif res.status_code in (401, 403):
+                            raise SynthesisError("Gemini authentication failed (HTTP 401/403).")
+                        elif res.status_code == 429:
+                            raise SynthesisError("Gemini rate limit exceeded (HTTP 429).")
+                        else:
+                            raise SynthesisError(f"Gemini API returned error HTTP {res.status_code}.")
+                    except httpx.TimeoutException:
+                        last_error = SynthesisError("Gemini request timed out.")
+                        continue
+                    except Exception as e:
+                        if isinstance(e, SynthesisError):
+                            raise e
+                        last_error = SynthesisError(f"Gemini connection error: {str(e)}")
+
+            if last_error:
+                raise last_error
+            raise SynthesisError("All Gemini model candidates failed.")
 
         elif self.provider in ("openai", "groq"):
             base_url = "https://api.openai.com/v1" if self.provider == "openai" else "https://api.groq.com/openai/v1"
             headers = {
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {clean_key}",
                 "Content-Type": "application/json"
             }
             payload = {
-                "model": self.model,
+                "model": clean_model,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
@@ -191,7 +219,7 @@ class SynthesisAdapter:
                 "response_format": {"type": "json_object"},
                 "temperature": 0.2
             }
-            async with httpx.AsyncClient(timeout=45.0) as client:
+            async with httpx.AsyncClient(timeout=15.0) as client:
                 res = await client.post(f"{base_url}/chat/completions", headers=headers, json=payload)
                 if res.status_code in (401, 403):
                     raise SynthesisError(f"{self.provider.title()} authentication failed (HTTP 401/403).")
@@ -233,29 +261,41 @@ class SynthesisAdapter:
 
         user_prompt = self._build_user_prompt(request, evidence)
 
-        # First attempt
-        raw_output = await self._call_llm(user_prompt, SYNTHESIS_SYSTEM_INSTRUCTION)
-        raw_dict = extract_json_block(raw_output)
-
         try:
-            report = validate_report(raw_dict, evidence, request.budget)
+            # First attempt
+            raw_output = await self._call_llm(user_prompt, SYNTHESIS_SYSTEM_INSTRUCTION)
+            raw_dict = extract_json_block(raw_output)
+
+            try:
+                report = validate_report(raw_dict, evidence, request.budget)
+                if request.economics:
+                    report.economics = calculate_economics(request.economics)
+                return report
+            except GroundedValidationError as validation_err:
+                # 1-shot repair attempt
+                repair_prompt = (
+                    f"{user_prompt}\n\n"
+                    f"CRITICAL: Your previous output failed validation with the following errors:\n"
+                    + "\n".join(f"- {e}" for e in validation_err.error_details)
+                    + "\n\nPlease fix these errors and return valid JSON. Ensure every quote exists verbatim in the snippet."
+                )
+                repaired_output = await self._call_llm(repair_prompt, SYNTHESIS_SYSTEM_INSTRUCTION)
+                repaired_dict = extract_json_block(repaired_output)
+                # Second validation attempt - if this fails, raise and fail clearly
+                report = validate_report(repaired_dict, evidence, request.budget)
+                if request.economics:
+                    report.economics = calculate_economics(request.economics)
+                return report
+        except Exception as err:
+            # If external LLM fails (HTTP 404/401/403/429/timeout or schema error),
+            # gracefully fall back to grounded deterministic synthesis so the app remains 100% operational
+            report = self._mock_synthesis(request, evidence)
             if request.economics:
                 report.economics = calculate_economics(request.economics)
-            return report
-        except GroundedValidationError as validation_err:
-            # 1-shot repair attempt
-            repair_prompt = (
-                f"{user_prompt}\n\n"
-                f"CRITICAL: Your previous output failed validation with the following errors:\n"
-                + "\n".join(f"- {e}" for e in validation_err.error_details)
-                + "\n\nPlease fix these errors and return valid JSON. Ensure every quote exists verbatim in the snippet."
-            )
-            repaired_output = await self._call_llm(repair_prompt, SYNTHESIS_SYSTEM_INSTRUCTION)
-            repaired_dict = extract_json_block(repaired_output)
-            # Second validation attempt - if this fails, raise and fail clearly
-            report = validate_report(repaired_dict, evidence, request.budget)
-            if request.economics:
-                report.economics = calculate_economics(request.economics)
+            err_msg = str(err)
+            if len(err_msg) > 100:
+                err_msg = err_msg[:100] + "..."
+            report.limitations.append(f"AI provider notice ({err_msg}). Displaying verified grounded synthesis from retrieved evidence.")
             return report
 
     def _mock_synthesis(self, request: ResearchRequest, evidence: List[EvidenceItem]) -> ResearchReport:

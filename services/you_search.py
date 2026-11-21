@@ -5,6 +5,7 @@ deduplication, evidence ID assignment, and privacy-safe error handling.
 """
 import os
 import re
+import asyncio
 import urllib.parse
 from datetime import datetime
 from typing import List, Dict, Any, Optional
@@ -195,10 +196,14 @@ class YouSearchAdapter:
         seen_urls = set()
         evidence_counter = 1
 
-        async with httpx.AsyncClient(timeout=25.0) as client:
-            for query in queries:
-                raw_items = await self._execute_single_query(query, client)
-                now_str = datetime.utcnow().isoformat() + "Z"
+        async with httpx.AsyncClient(timeout=12.0) as client:
+            tasks = [self._execute_single_query(query, client) for query in queries]
+            query_results = await asyncio.gather(*tasks, return_exceptions=True)
+            now_str = datetime.utcnow().isoformat() + "Z"
+
+            for query, raw_items in zip(queries, query_results):
+                if isinstance(raw_items, Exception) or not isinstance(raw_items, list):
+                    continue
 
                 for item in raw_items:
                     raw_url = item.get("url") or item.get("link")
