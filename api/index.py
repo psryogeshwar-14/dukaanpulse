@@ -1,6 +1,7 @@
 """
 Vercel Serverless Function Entrypoint
 Exposes the FastAPI app instance for Vercel Python runtime.
+Updated with Vercel request path middleware support.
 """
 import sys
 import os

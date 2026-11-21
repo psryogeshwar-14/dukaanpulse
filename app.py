@@ -48,6 +48,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Restore original requested path from Vercel's rewrite headers
+@app.middleware("http")
+async def vercel_path_middleware(request: Request, call_next):
+    forwarded_uri = (
+        request.headers.get("x-forwarded-uri") or
+        request.headers.get("x-matched-path") or
+        request.headers.get("x-vercel-matched-path") or
+        request.headers.get("x-original-uri")
+    )
+    if forwarded_uri and forwarded_uri != "/api/index.py":
+        path_only = forwarded_uri.split("?")[0]
+        request.scope["path"] = path_only
+
+    return await call_next(request)
+
 # Initialize storage and services
 is_serverless = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
 DB_PATH = os.getenv(
@@ -268,5 +283,6 @@ async def catch_all(request: Request, path_name: str):
         "status": "unmatched_route",
         "received_path": request.url.path,
         "path_name": path_name,
-        "registered_routes": [route.path for route in app.routes if hasattr(route, "path")]
+        "headers": dict(request.headers),
+        "routes": [f"{r.path} ({type(r).__name__})" for r in app.routes if hasattr(r, "path")]
     })
