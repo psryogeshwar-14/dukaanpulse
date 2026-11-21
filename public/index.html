@@ -9,22 +9,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #111827;
-      --card-border: #1f293d;
-      --card-hover: #172238;
-      --text: #f3f4f6;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.15);
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --success: #10b981;
-      --success-bg: rgba(16, 185, 129, 0.12);
-      --warning: #f59e0b;
-      --warning-bg: rgba(245, 158, 11, 0.12);
-      --danger: #ef4444;
-      --danger-bg: rgba(239, 68, 68, 0.12);
+      /* User's requested palette: #4A6B5D, #F5EFE6, #C85A32 */
+      --pine: #4A6B5D;
+      --pine-dark: #375246;
+      --pine-light: #5E8573;
+      --pine-soft: rgba(74, 107, 93, 0.12);
+
+      --cream: #F5EFE6;
+      --cream-dark: #EADFCF;
+      --cream-card: #FFFFFF;
+      --cream-soft: #FAF7F2;
+
+      --terracotta: #C85A32;
+      --terracotta-dark: #A94723;
+      --terracotta-light: #DE6D43;
+      --terracotta-soft: rgba(200, 90, 50, 0.12);
+
+      /* Semantic tokens */
+      --bg: var(--cream);
+      --card-bg: var(--cream-card);
+      --card-border: #E5DDD0;
+      --card-hover: var(--cream-soft);
+      --text: #202C26;
+      --text-muted: #607068;
+      --text-light: #8E9C95;
+
+      --accent: var(--terracotta);
+      --accent-glow: var(--terracotta-soft);
+      --primary: var(--pine);
+      --primary-hover: var(--pine-dark);
+      --primary-glow: var(--pine-soft);
+
+      --success: #2F7A56;
+      --success-bg: rgba(47, 122, 86, 0.12);
+      --warning: #D97706;
+      --warning-bg: rgba(217, 119, 6, 0.12);
+      --danger: var(--terracotta);
+      --danger-bg: var(--terracotta-soft);
+
       --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --mono: 'JetBrains Mono', monospace;
     }
@@ -42,13 +64,13 @@
     }
 
     header {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
+      background: var(--pine);
+      border-bottom: 1px solid var(--pine-dark);
       position: sticky;
       top: 0;
       z-index: 50;
       padding: 1rem 1.5rem;
+      box-shadow: 0 4px 16px rgba(74, 107, 93, 0.18);
     }
 
     .header-container {
@@ -68,44 +90,44 @@
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      width: 38px;
+      height: 38px;
+      background: var(--terracotta);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       color: #fff;
-      font-size: 1.2rem;
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+      font-size: 1.25rem;
+      box-shadow: 0 3px 10px rgba(200, 90, 50, 0.35);
     }
 
     .brand-title {
       font-size: 1.25rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #fff;
+      color: #FFFFFF;
     }
 
     .brand-subtitle {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #D6E4DD;
     }
 
     .nav-tabs {
       display: flex;
       gap: 0.5rem;
-      background: #0d1322;
+      background: rgba(0, 0, 0, 0.15);
       padding: 4px;
       border-radius: 10px;
-      border: 1px solid var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .nav-btn {
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: #E2EDE7;
       padding: 0.45rem 0.9rem;
       border-radius: 8px;
       font-family: var(--font);
@@ -115,11 +137,12 @@
       transition: all 0.2s ease;
     }
 
-    .nav-btn:hover { color: var(--text); }
+    .nav-btn:hover { color: #FFFFFF; }
     .nav-btn.active {
-      background: var(--card-bg);
-      color: var(--accent);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      background: var(--cream);
+      color: var(--pine-dark);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     main {
@@ -147,7 +170,7 @@
       border-radius: 16px;
       padding: 1.75rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 20px rgba(74, 107, 93, 0.06);
     }
 
     .card-header {
@@ -162,7 +185,7 @@
     .card-title {
       font-size: 1.2rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -175,15 +198,15 @@
       padding: 0.25rem 0.65rem;
       border-radius: 9999px;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
-    .badge-ready { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-insufficient { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-    .badge-info { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-ready { background: var(--success-bg); color: var(--success); border: 1px solid rgba(47, 122, 86, 0.3); }
+    .badge-insufficient { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(200, 90, 50, 0.3); }
+    .badge-info { background: var(--primary-glow); color: var(--pine-dark); border: 1px solid rgba(74, 107, 93, 0.3); }
 
     .form-grid {
       display: grid;
@@ -202,15 +225,15 @@
     label {
       font-size: 0.85rem;
       font-weight: 600;
-      color: #d1d5db;
+      color: #37463F;
     }
 
     input, textarea, select {
-      background: #0b111e;
-      border: 1px solid var(--card-border);
+      background: #FAF7F2;
+      border: 1px solid #D8CFC2;
       border-radius: 10px;
       padding: 0.75rem 1rem;
-      color: #fff;
+      color: var(--text);
       font-family: var(--font);
       font-size: 0.95rem;
       transition: all 0.2s;
@@ -218,8 +241,9 @@
 
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: #FFFFFF;
+      border-color: var(--pine);
+      box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
     .btn {
@@ -238,19 +262,27 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #6366f1, #38bdf8);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+      background: linear-gradient(135deg, var(--terracotta), var(--terracotta-light));
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(200, 90, 50, 0.3);
     }
 
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+      box-shadow: 0 6px 20px rgba(200, 90, 50, 0.4);
+      background: linear-gradient(135deg, var(--terracotta-dark), var(--terracotta));
     }
 
     .btn-success {
-      background: linear-gradient(135deg, #059669, #10b981);
-      color: #fff;
+      background: linear-gradient(135deg, var(--pine), var(--pine-light));
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(74, 107, 93, 0.25);
+    }
+
+    .btn-success:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(74, 107, 93, 0.35);
+      background: linear-gradient(135deg, var(--pine-dark), var(--pine));
     }
 
     .btn:disabled {
@@ -260,12 +292,13 @@
 
     /* Live Progress */
     .progress-box {
-      background: #0b111e;
+      background: #FAF7F2;
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.5rem;
       font-family: var(--mono);
       font-size: 0.85rem;
+      color: var(--text);
     }
 
     .stage-item {
@@ -276,23 +309,23 @@
       color: var(--text-muted);
     }
 
-    .stage-item.current { color: var(--accent); font-weight: 600; }
-    .stage-item.done { color: var(--success); }
+    .stage-item.current { color: var(--terracotta); font-weight: 600; }
+    .stage-item.done { color: var(--pine); font-weight: 600; }
 
     .stage-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #374151;
+      background: #D4C9BC;
     }
 
     .stage-item.current .stage-dot {
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
+      background: var(--terracotta);
+      box-shadow: 0 0 10px rgba(200, 90, 50, 0.5);
       animation: pulse 1.5s infinite;
     }
 
-    .stage-item.done .stage-dot { background: var(--success); }
+    .stage-item.done .stage-dot { background: var(--pine); }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
@@ -302,46 +335,46 @@
     .chip {
       display: inline-flex;
       align-items: center;
-      background: #1e293b;
-      color: var(--accent);
-      border: 1px solid #334155;
-      padding: 0.15rem 0.5rem;
+      background: #EFE8DD;
+      color: var(--pine-dark);
+      border: 1px solid #D6CBC0;
+      padding: 0.15rem 0.55rem;
       border-radius: 6px;
       font-family: var(--mono);
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       margin: 0 0.2rem;
       transition: all 0.2s;
     }
 
     .chip:hover {
-      background: var(--accent);
-      color: #0b111e;
-      border-color: var(--accent);
+      background: var(--terracotta);
+      color: #FFFFFF;
+      border-color: var(--terracotta);
     }
 
     .finding-card {
-      background: #0e1626;
-      border: 1px solid #1f2c45;
+      background: #FAF7F2;
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.25rem;
       margin-bottom: 1rem;
     }
 
     .quote-block {
-      background: rgba(15, 23, 42, 0.6);
-      border-left: 3px solid var(--accent);
+      background: #F1E9DE;
+      border-left: 3px solid var(--terracotta);
       padding: 0.6rem 0.9rem;
       margin-top: 0.6rem;
       font-size: 0.85rem;
-      color: #cbd5e1;
+      color: #2F3C35;
       border-radius: 0 6px 6px 0;
     }
 
     .econ-box {
-      background: #0a1120;
-      border: 1px solid #25334d;
+      background: #FAF7F2;
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
@@ -355,10 +388,11 @@
     }
 
     .econ-metric {
-      background: #0f172a;
+      background: #FFFFFF;
       border: 1px solid var(--card-border);
       border-radius: 10px;
       padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     .econ-title {
@@ -371,13 +405,13 @@
     .econ-val {
       font-size: 1.35rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text);
       margin-top: 0.25rem;
     }
 
     .experiment-card {
-      border: 2px solid #6366f1;
-      background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(17, 24, 39, 0.95) 100%);
+      border: 2px solid var(--pine);
+      background: linear-gradient(180deg, rgba(74, 107, 93, 0.06) 0%, #FFFFFF 100%);
     }
 
     .step-list {
@@ -388,7 +422,7 @@
 
     .step-list li {
       margin-bottom: 0.4rem;
-      color: #e2e8f0;
+      color: #2D3A33;
     }
 
     .metric-grid {
@@ -399,7 +433,7 @@
     }
 
     .metric-card {
-      background: #0d1527;
+      background: #FAF7F2;
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.25rem;
@@ -418,7 +452,7 @@
     .metric-value {
       font-size: 1.6rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text);
     }
 
     .metric-sub {
@@ -428,16 +462,17 @@
     }
 
     .metric-highlight {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), #0d1527);
+      border-color: var(--pine);
+      background: rgba(74, 107, 93, 0.08);
     }
 
-    .metric-highlight .metric-value { color: var(--success); }
+    .metric-highlight .metric-value { color: var(--pine-dark); }
 
     .table-container {
       overflow-x: auto;
       border: 1px solid var(--card-border);
       border-radius: 12px;
+      background: #FFFFFF;
     }
 
     table {
@@ -448,17 +483,17 @@
     }
 
     th {
-      background: #0a0f1d;
+      background: #F1E9DE;
       padding: 0.85rem 1rem;
-      font-weight: 600;
-      color: #94a3b8;
+      font-weight: 700;
+      color: var(--pine-dark);
       border-bottom: 1px solid var(--card-border);
     }
 
     td {
       padding: 0.85rem 1rem;
-      border-bottom: 1px solid #1a2333;
-      color: #e2e8f0;
+      border-bottom: 1px solid #EFE8DD;
+      color: var(--text);
     }
 
     tr:last-child td { border-bottom: none; }
@@ -467,7 +502,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(33, 44, 38, 0.6);
       backdrop-filter: blur(4px);
       z-index: 100;
       align-items: center;
@@ -478,14 +513,15 @@
     .modal-overlay.active { display: flex; }
 
     .modal-content {
-      background: var(--card-bg);
+      background: #FFFFFF;
       border: 1px solid var(--card-border);
       border-radius: 16px;
       max-width: 650px;
       width: 100%;
       padding: 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 40px rgba(74, 107, 93, 0.16);
       position: relative;
+      color: var(--text);
     }
 
     .modal-close {
@@ -499,7 +535,7 @@
       cursor: pointer;
     }
 
-    .modal-close:hover { color: #fff; }
+    .modal-close:hover { color: var(--text); }
 
     .alert {
       padding: 1rem 1.25rem;
@@ -513,14 +549,14 @@
 
     .alert-danger {
       background: var(--danger-bg);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
+      border: 1px solid rgba(200, 90, 50, 0.35);
+      color: #8C2E0E;
     }
 
     .alert-warning {
       background: var(--warning-bg);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #fde68a;
+      border: 1px solid rgba(201, 114, 23, 0.35);
+      color: #8A4C0A;
     }
 
     footer {
@@ -530,6 +566,7 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: auto;
+      background: #FAF7F2;
     }
   </style>
 </head>
@@ -573,11 +610,11 @@
         </p>
 
         <!-- Quick Demo Scenarios Selector -->
-        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid #312e81; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #818cf8; text-transform: uppercase;">Quick Demo Scenarios:</span>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e1b4b; color: #c7d2fe; border: 1px solid #4338ca;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #064e3b; color: #a7f3d0; border: 1px solid #059669;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #450a0a; color: #fecaca; border: 1px solid #dc2626;" onclick="loadScenario('loss_making_matcha')">Scenario 3: High-Cost Matcha (Negative Margin Warning)</button>
+        <div style="background: rgba(74, 107, 93, 0.08); border: 1px solid #CCD8D2; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: #4A6B5D; text-transform: uppercase;">Quick Demo Scenarios:</span>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #4A6B5D; color: #F5EFE6; border: 1px solid #375246;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #C85A32; color: #F5EFE6; border: 1px solid #A94723;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
+          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FFF1E6; color: #C85A32; border: 1px solid #F0C2A8;" onclick="loadScenario('loss_making_matcha')">Scenario 3: High-Cost Matcha (Negative Margin Warning)</button>
         </div>
 
         <form id="researchForm" onsubmit="handleFormSubmit(event)">
@@ -725,7 +762,7 @@
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="reportMetaInfo"></div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #e2e8f0; border: 1px solid #334155;" onclick="printSOPCard()">
+            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="printSOPCard()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               <span>Print Staff SOP Card</span>
             </button>
@@ -743,7 +780,7 @@
         </div>
 
         <!-- 1. Factual Observations with Evidence Chips -->
-        <h3 style="font-size: 1rem; color: #cbd5e1; margin-bottom: 0.75rem;">
+        <h3 style="font-size: 1rem; color: #4A6B5D; margin-bottom: 0.75rem;">
           1. Factual Market Observations (Click chip to inspect You.com excerpt)
         </h3>
         <div id="observationsContainer"></div>
@@ -751,45 +788,45 @@
         <!-- 2. Unit Economics Summary -->
         <div class="econ-box" style="margin: 1.5rem 0;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <h3 style="font-size: 1rem; color: #fff; font-weight: 700;">2. Checked Unit Economics (Owner Assumptions)</h3>
+            <h3 style="font-size: 1rem; color: var(--text); font-weight: 700;">2. Checked Unit Economics (Owner Assumptions)</h3>
             <span class="badge badge-info" id="econStatusBadge">Calculated in Python</span>
           </div>
           <div class="econ-grid" id="reportEconGrid"></div>
           <div id="reportEconGuidance" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem;"></div>
 
           <!-- Stale Assumption Simulator Box -->
-          <div style="background: #0d1527; border: 1px dashed #38bdf8; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.25rem;">
+          <div style="background: #FAF7F2; border: 1px dashed #C85A32; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <strong style="color: #38bdf8; font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
+              <strong style="color: #C85A32; font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
               <span style="font-size: 0.75rem; color: var(--text-muted);">See what happens if supplier ingredient costs surge</span>
             </div>
             <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
               <label for="simIngredientCost" style="font-size: 0.8rem;">Simulate Ingredient Cost (₹):</label>
               <input type="number" id="simIngredientCost" value="130" style="width: 110px; padding: 0.35rem 0.5rem; font-size: 0.85rem;">
               <button type="button" class="btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;" onclick="simulateCostChange()">Check Invalidation</button>
-              <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #94a3b8;" onclick="resetSimCost()">Reset to Original</button>
+              <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #EFE8DD; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="resetSimCost()">Reset to Original</button>
             </div>
           </div>
         </div>
 
         <!-- 3. Material Unknowns -->
         <div style="margin: 1.5rem 0;">
-          <h3 style="font-size: 1rem; color: #cbd5e1; margin-bottom: 0.5rem;">3. Material Unknowns & Information Gaps</h3>
+          <h3 style="font-size: 1rem; color: #4A6B5D; margin-bottom: 0.5rem;">3. Material Unknowns & Information Gaps</h3>
           <ul id="unknownsList" style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.9rem;"></ul>
         </div>
 
         <!-- 4. Tentative Hypothesis -->
-        <div style="margin: 1.5rem 0; background: #0b111e; border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 12px;">
+        <div style="margin: 1.5rem 0; background: #FAF7F2; border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 12px;">
           <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
             4. Tentative Opportunity Hypothesis (Not Proven Demand)
           </div>
-          <p id="hypothesisText" style="color: #f1f5f9; font-size: 0.95rem;"></p>
+          <p id="hypothesisText" style="color: var(--text); font-size: 0.95rem;"></p>
         </div>
 
         <!-- 5. Bounded Experiment Proposal -->
         <div class="card experiment-card" id="experimentProposalBox">
           <div class="card-header">
-            <div class="card-title" style="color: #818cf8;">
+            <div class="card-title" style="color: #4A6B5D;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
               <span id="experimentTitle">Proposed Bounded Experiment</span>
             </div>
@@ -806,11 +843,11 @@
           </p>
           <ol class="step-list" id="experimentSteps"></ol>
 
-          <div style="background: rgba(15, 23, 42, 0.7); padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; font-size: 0.85rem;">
-            <div style="font-weight: 600; color: #38bdf8; margin-bottom: 0.2rem;">Owner-Approved Success Target:</div>
-            <div id="experimentSuccessTarget" style="color: #cbd5e1;"></div>
-            <div style="font-weight: 600; color: #ef4444; margin-top: 0.5rem; margin-bottom: 0.2rem;">Stop / Revise Conditions:</div>
-            <ul id="experimentStopConditions" style="padding-left: 1.25rem; color: #fca5a5;"></ul>
+          <div style="background: rgba(74, 107, 93, 0.08); border: 1px solid rgba(74, 107, 93, 0.2); padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; font-size: 0.85rem;">
+            <div style="font-weight: 600; color: #4A6B5D; margin-bottom: 0.2rem;">Owner-Approved Success Target:</div>
+            <div id="experimentSuccessTarget" style="color: var(--text);"></div>
+            <div style="font-weight: 600; color: #C85A32; margin-top: 0.5rem; margin-bottom: 0.2rem;">Stop / Revise Conditions:</div>
+            <ul id="experimentStopConditions" style="padding-left: 1.25rem; color: #A94723;"></ul>
           </div>
 
           <!-- Owner Approval CTA -->
@@ -819,7 +856,7 @@
               By accepting, you lock this experiment and its snapshot of cost assumptions into SQLite storage and launch the measurement tracker.
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn" style="background: #1e293b; color: #e2e8f0; border: 1px solid #334155; font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
+              <button type="button" class="btn" style="background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2; font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
               <button class="btn btn-success" id="btnAcceptExperiment" onclick="acceptExperiment()">
                 <span>Approve & Accept Experiment</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -831,7 +868,7 @@
         <!-- 6. Limitations & Disclaimers -->
         <div style="margin-top: 1.5rem;">
           <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">Methodology Limitations</h4>
-          <ul id="limitationsList" style="padding-left: 1.25rem; color: #64748b; font-size: 0.8rem;"></ul>
+          <ul id="limitationsList" style="padding-left: 1.25rem; color: #607068; font-size: 0.8rem;"></ul>
         </div>
       </div>
     </section>
@@ -845,7 +882,7 @@
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="trackerExpMeta"></div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #1e293b; color: #e2e8f0; border: 1px solid #334155;" onclick="printSOPCard()">
+            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="printSOPCard()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               <span>Print Staff SOP</span>
             </button>
@@ -854,9 +891,9 @@
         </div>
 
         <!-- Experiment Approved Assumptions Snapshot -->
-        <div style="background: #0d1527; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
-          <strong style="color: #38bdf8;">Approved Assumptions at Acceptance:</strong>
-          <div id="trackerAssumptions" style="color: #cbd5e1; margin-top: 0.25rem;"></div>
+        <div style="background: #FAF7F2; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
+          <strong style="color: #4A6B5D;">Approved Assumptions at Acceptance:</strong>
+          <div id="trackerAssumptions" style="color: var(--text); margin-top: 0.25rem;"></div>
         </div>
 
         <!-- Financial KPI Dashboard -->
@@ -887,8 +924,8 @@
         </div>
 
         <!-- Outcome Entry Form -->
-        <div style="background: #0d1527; border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 0.75rem;">Log Daily Test Measurement</h4>
+        <div style="background: #FAF7F2; border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.95rem; color: var(--text); margin-bottom: 0.75rem;">Log Daily Test Measurement</h4>
           <form id="outcomeForm" onsubmit="handleOutcomeSubmit(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: flex-end;">
             <div class="form-group">
               <label for="outDate">Date *</label>
@@ -952,20 +989,20 @@
       <button class="modal-close" onclick="closeEvidenceModal()" aria-label="Close modal">&times;</button>
       <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
         <span class="chip" id="modalEvidenceBadge">E1</span>
-        <h3 id="modalEvidenceTitle" style="font-size: 1.1rem; color: #fff; font-weight: 700;"></h3>
+        <h3 id="modalEvidenceTitle" style="font-size: 1.1rem; color: var(--text); font-weight: 700;"></h3>
       </div>
 
       <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
-        <div><strong>Source Query:</strong> <span id="modalEvidenceQuery" style="font-family: var(--mono); color: #cbd5e1;"></span></div>
+        <div><strong>Source Query:</strong> <span id="modalEvidenceQuery" style="font-family: var(--mono); color: var(--pine-dark);"></span></div>
         <div><strong>Retrieval Timestamp:</strong> <span id="modalEvidenceRetrieved"></span></div>
         <div><strong>Source Publication Date:</strong> <span id="modalEvidenceDate">Not reported</span></div>
       </div>
 
-      <div style="background: #080d1a; border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
+      <div style="background: #FAF7F2; border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
         <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 0.4rem;">
           Retrieved Excerpt from You.com
         </div>
-        <p id="modalEvidenceSnippet" style="color: #e2e8f0; font-size: 0.9rem; line-height: 1.5;"></p>
+        <p id="modalEvidenceSnippet" style="color: var(--text); font-size: 0.9rem; line-height: 1.5;"></p>
       </div>
 
       <div style="display: flex; justify-content: flex-end;">
@@ -1093,22 +1130,22 @@
 
         const totalEst = setup + (qty * varCost);
         if (totalEst > budget) {
-          guidanceBox.style.background = 'rgba(239, 68, 68, 0.12)';
-          guidanceBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-          guidanceBox.style.color = '#fca5a5';
+          guidanceBox.style.background = 'rgba(200, 90, 50, 0.12)';
+          guidanceBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
+          guidanceBox.style.color = '#8C2E0E';
           guidanceBox.textContent = `OVER BUDGET. Estimated pilot cost (₹${totalEst.toFixed(2)}) exceeds budget ceiling of ₹${budget.toFixed(2)}. Reduce planned batch size or setup costs.`;
         } else {
-          guidanceBox.style.background = 'rgba(16, 185, 129, 0.12)';
-          guidanceBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
-          guidanceBox.style.color = '#6ee7b7';
+          guidanceBox.style.background = 'rgba(74, 107, 93, 0.12)';
+          guidanceBox.style.border = '1px solid rgba(74, 107, 93, 0.35)';
+          guidanceBox.style.color = '#254B38';
           guidanceBox.textContent = `FINANCIALLY VIABLE. Generates positive contribution of ₹${contrib.toFixed(2)}/order (${margin}% margin). ${breakEven} orders cover setup expenses.`;
         }
       } else {
         contribEl.style.color = 'var(--danger)';
         breakEvenEl.textContent = 'None (Negative)';
-        guidanceBox.style.background = 'rgba(239, 68, 68, 0.12)';
-        guidanceBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-        guidanceBox.style.color = '#fca5a5';
+        guidanceBox.style.background = 'rgba(200, 90, 50, 0.12)';
+        guidanceBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
+        guidanceBox.style.color = '#8C2E0E';
         guidanceBox.textContent = `DO NOT LAUNCH. Unit variable costs (₹${varCost.toFixed(2)}) equal or exceed selling price (₹${price.toFixed(2)}). Every order loses money.`;
       }
     }
@@ -1234,7 +1271,7 @@
 
           const claimSpan = document.createElement('div');
           claimSpan.style.fontWeight = '600';
-          claimSpan.style.color = '#f8fafc';
+          claimSpan.style.color = 'var(--text)';
           claimSpan.textContent = obs.claim;
 
           const chipsSpan = document.createElement('div');
@@ -1295,14 +1332,14 @@
         const gBox = document.getElementById('reportEconGuidance');
         gBox.textContent = econ.guidance;
         if (econ.is_viable) {
-          gBox.style.background = 'rgba(16, 185, 129, 0.12)';
-          gBox.style.color = '#6ee7b7';
-          gBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+          gBox.style.background = 'rgba(74, 107, 93, 0.12)';
+          gBox.style.color = '#254B38';
+          gBox.style.border = '1px solid rgba(74, 107, 93, 0.35)';
           document.getElementById('btnAcceptExperiment').disabled = false;
         } else {
-          gBox.style.background = 'rgba(239, 68, 68, 0.12)';
-          gBox.style.color = '#fca5a5';
-          gBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+          gBox.style.background = 'rgba(200, 90, 50, 0.12)';
+          gBox.style.color = '#8C2E0E';
+          gBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
           document.getElementById('btnAcceptExperiment').disabled = true;
         }
       }
@@ -1421,20 +1458,21 @@
         <head>
           <title>Staff SOP Experiment Card - DukaanPulse</title>
           <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #111; line-height: 1.5; }
-            .box { border: 2px solid #000; padding: 1.5rem; border-radius: 8px; }
-            h1 { font-size: 1.4rem; margin-top: 0; }
-            .badge { display: inline-block; padding: 4px 8px; background: #eee; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #202C26; background: #F5EFE6; line-height: 1.5; }
+            .box { border: 2px solid #4A6B5D; padding: 1.5rem; border-radius: 8px; background: #FFFFFF; }
+            h1 { font-size: 1.4rem; margin-top: 0; color: #202C26; }
+            .badge { display: inline-block; padding: 4px 8px; background: #4A6B5D; color: #FFFFFF; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
             ul, ol { padding-left: 1.25rem; }
             li { margin-bottom: 0.5rem; }
-            table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-            th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+            table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #FFFFFF; }
+            th, td { border: 1px solid #D8CFC2; padding: 8px; text-align: left; }
+            th { background: #EFE8DD; color: #4A6B5D; }
             @media print { button { display: none; } }
           </style>
         </head>
         <body>
           <div style="margin-bottom: 1rem;">
-            <button onclick="window.print()" style="padding: 8px 16px; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
+            <button onclick="window.print()" style="padding: 8px 16px; background: #C85A32; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
           </div>
           <div class="box">
             <div style="display: flex; justify-content: space-between; align-items: center;">
