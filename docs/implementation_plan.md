@@ -49,6 +49,12 @@
   - [x] Screen 2: Real-time research progress console with elapsed timer and transparent step tracking.
   - [x] Screen 3: Verified report with clickable evidence chips, interactive modal drawer, live cost sensitivity/stale simulator, and printable Staff SOP Card.
   - [x] Screen 4: Experiment tracker with approved assumptions snapshot, daily measurement entry form, and cumulative contribution margin KPI ledger.
+  - [x] Visual Design Refresh:
+    - Slate 900 (`#0F172A`) for main text and headings.
+    - Teal 700 (`#0F766E`) for primary brand, primary actions, and buttons.
+    - Slate 50 (`#F8FAFC`) for page background.
+    - Amber 500 (`#F59E0B`) for accent highlights and amber badges with navy text (`#0F172A`).
+    - White surfaces (`#FFFFFF`) for cards and form controls, subtle borders (`#E2E8F0`), restrained shadows, and WCAG AA/AAA compliance with visible keyboard focus (`:focus-visible`).
   - [x] SQLite thread-safe persistence in `services/storage.py` with ACID transactions and restart persistence.
   - [x] XSS immunity: zero unsafe `innerHTML`, strict textContent and DOM node creation.
 
