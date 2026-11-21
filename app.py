@@ -49,9 +49,10 @@ app.add_middleware(
 )
 
 # Initialize storage and services
+is_serverless = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
 DB_PATH = os.getenv(
     "DATABASE_PATH",
-    "/tmp/dukaanpulse.db" if os.getenv("VERCEL") else "dukaanpulse.db"
+    "/tmp/dukaanpulse.db" if is_serverless else "dukaanpulse.db"
 )
 storage = Storage(db_path=DB_PATH)
 
