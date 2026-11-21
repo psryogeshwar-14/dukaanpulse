@@ -9,16 +9,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI, HTTPException, status, APIRouter, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from services.models import (
     ResearchRequest, ResearchResponse, ExperimentCreate,
     ExperimentRecord, OutcomeInput, OutcomeRecord, HealthResponse,
-    MerchantEconomicsInput, EconomicsResult
+    MerchantEconomicsInput, EconomicsResult, ResearchRunSummary,
+    ExperimentTask, ExperimentTaskCreate, ExperimentTaskUpdate,
+    OfferComparisonRequest, OfferComparisonResponse
 )
 from services.storage import Storage
 from services.you_search import (
@@ -30,8 +32,9 @@ from services.synthesis import (
 )
 from services.validators import GroundedValidationError
 from services.economics import (
-    calculate_economics, check_stale_advice, EconomicsValidationError
+    calculate_economics, check_stale_advice, compare_offers, EconomicsValidationError
 )
+from services.export import generate_research_csv, generate_experiment_csv
 
 app = FastAPI(
     title="DukaanPulse API",
@@ -158,6 +161,28 @@ async def check_experiment_staleness(payload: StaleCheckRequest):
     )
 
 
+@app.post("/api/economics/compare", response_model=OfferComparisonResponse)
+@app.post("/economics/compare", response_model=OfferComparisonResponse)
+async def compare_merchant_offers(payload: OfferComparisonRequest):
+    """
+    Evaluates and compares two owner-defined offers under entered cost assumptions.
+    Saves comparison record in SQLite.
+    """
+    try:
+        comparison = compare_offers(payload)
+        storage.save_offer_comparison(comparison)
+        return comparison
+    except EconomicsValidationError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@app.get("/api/economics/comparisons", response_model=List[OfferComparisonResponse])
+@app.get("/economics/comparisons", response_model=List[OfferComparisonResponse])
+async def list_merchant_offer_comparisons():
+    """Lists saved offer comparisons from local storage."""
+    return storage.list_offer_comparisons()
+
+
 @app.post("/api/research", response_model=ResearchResponse)
 @app.post("/research", response_model=ResearchResponse)
 async def run_research(request: ResearchRequest):
@@ -202,6 +227,16 @@ async def run_research(request: ResearchRequest):
     return saved
 
 
+@app.get("/api/research", response_model=List[ResearchRunSummary])
+@app.get("/research", response_model=List[ResearchRunSummary])
+async def list_research_history():
+    """
+    Lists historical research runs stored in SQLite.
+    Opening history does not consume third-party API credits.
+    """
+    return storage.list_research_runs()
+
+
 @app.get("/api/research/{research_id}", response_model=ResearchResponse)
 @app.get("/research/{research_id}", response_model=ResearchResponse)
 async def get_research(research_id: str):
@@ -213,6 +248,27 @@ async def get_research(research_id: str):
             detail=f"Research run '{research_id}' not found."
         )
     return saved
+
+
+@app.get("/api/research/{research_id}/export-csv")
+@app.get("/research/{research_id}/export-csv")
+async def export_research_csv(research_id: str):
+    """
+    Exports research run and verified evidence ledger to an injection-safe CSV.
+    """
+    saved = storage.get_research(research_id)
+    if not saved:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Research run '{research_id}' not found."
+        )
+    csv_content = generate_research_csv(saved)
+    filename = f"dukaanpulse_research_{research_id}.csv"
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
 
 
 @app.post("/api/experiments", response_model=ExperimentRecord)
@@ -266,6 +322,83 @@ async def add_outcome(experiment_id: str, outcome: OutcomeInput):
         )
     updated_exp = storage.get_experiment(experiment_id)
     return updated_exp
+
+
+@app.get("/api/experiments/{experiment_id}/tasks", response_model=List[ExperimentTask])
+@app.get("/experiments/{experiment_id}/tasks", response_model=List[ExperimentTask])
+async def list_experiment_tasks(experiment_id: str):
+    """Lists all operational tasks (both AI-proposed and owner-added) for an experiment."""
+    exp = storage.get_experiment(experiment_id)
+    if not exp:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Experiment '{experiment_id}' not found."
+        )
+    return storage.get_experiment_tasks(experiment_id)
+
+
+@app.post("/api/experiments/{experiment_id}/tasks", response_model=ExperimentTask)
+@app.post("/experiments/{experiment_id}/tasks", response_model=ExperimentTask)
+async def create_experiment_task(experiment_id: str, input_task: ExperimentTaskCreate):
+    """Adds a new owner-defined actionable checklist item to the experiment."""
+    task = storage.add_experiment_task(experiment_id, input_task.text, is_owner_added=True)
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Experiment '{experiment_id}' not found."
+        )
+    return task
+
+
+@app.patch("/api/experiments/{experiment_id}/tasks/{task_id}", response_model=ExperimentTask)
+@app.patch("/experiments/{experiment_id}/tasks/{task_id}", response_model=ExperimentTask)
+async def update_experiment_task(experiment_id: str, task_id: str, input_update: ExperimentTaskUpdate):
+    """Updates task completion state or description."""
+    updated = storage.update_experiment_task(
+        task_id, is_completed=input_update.is_completed, text=input_update.text
+    )
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Task '{task_id}' not found."
+        )
+    return updated
+
+
+@app.delete("/api/experiments/{experiment_id}/tasks/{task_id}")
+@app.delete("/experiments/{experiment_id}/tasks/{task_id}")
+async def delete_experiment_task(experiment_id: str, task_id: str):
+    """Deletes an actionable task item."""
+    success = storage.delete_experiment_task(task_id)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Task '{task_id}' not found."
+        )
+    return {"status": "deleted", "task_id": task_id}
+
+
+@app.get("/api/experiments/{experiment_id}/export-csv")
+@app.get("/experiments/{experiment_id}/export-csv")
+async def export_experiment_csv(experiment_id: str):
+    """
+    Exports experiment specifications, daily outcomes ledger, and task checklist
+    to an injection-safe CSV spreadsheet.
+    """
+    exp = storage.get_experiment(experiment_id)
+    if not exp:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Experiment '{experiment_id}' not found."
+        )
+    tasks = storage.get_experiment_tasks(experiment_id)
+    csv_content = generate_experiment_csv(exp, tasks)
+    filename = f"dukaanpulse_experiment_{experiment_id}.csv"
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
 
 
 # Serve index.html for root route

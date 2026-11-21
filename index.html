@@ -18,7 +18,7 @@
       --primary-hover: #115E59;     /* Teal 800 */
       --primary-light: #F0FDFA;     /* Teal 50 */
       --primary-border: #99F6E4;    /* Teal 200 */
-      --primary-glow: rgba(15, 118, 110, 0.12);
+      --primary-glow: rgba(15, 118, 110, 0.15);
 
       --bg: #F8FAFC;                 /* Slate 50: Page background */
       --card-bg: #FFFFFF;           /* White surfaces for cards and form controls */
@@ -69,12 +69,12 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      padding: 1rem 1.5rem;
+      padding: 0.85rem 1.5rem;
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     }
 
     .header-container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -87,6 +87,8 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
     }
 
     .brand-icon {
@@ -127,7 +129,7 @@
     }
 
     .brand-subtitle {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
@@ -138,19 +140,21 @@
       padding: 4px;
       border-radius: 10px;
       border: 1px solid var(--card-border);
+      flex-wrap: wrap;
     }
 
     .nav-btn {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 0.45rem 0.95rem;
+      padding: 0.45rem 0.85rem;
       border-radius: 8px;
       font-family: var(--font);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
 
     .nav-btn:hover:not(:disabled) {
@@ -174,20 +178,20 @@
     /* Main Container */
     main {
       flex: 1;
-      max-width: 1200px;
+      max-width: 1240px;
       width: 100%;
-      margin: 2rem auto;
+      margin: 1.75rem auto;
       padding: 0 1.5rem;
     }
 
     .screen { display: none; }
     .screen.active {
       display: block;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -207,7 +211,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
     .card-title {
@@ -282,10 +286,10 @@
       background: #FFFFFF; /* White surfaces for form controls */
       border: 1px solid #CBD5E1;
       border-radius: 8px;
-      padding: 0.75rem 1rem;
+      padding: 0.7rem 0.95rem;
       color: var(--text);
       font-family: var(--font);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -296,21 +300,32 @@
       box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
+    input.input-invalid {
+      border-color: var(--danger) !important;
+      background-color: #FFF5F5 !important;
+    }
+
     /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.7rem 1.4rem;
+      padding: 0.65rem 1.35rem;
       border-radius: 8px;
       font-family: var(--font);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s ease;
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      min-width: fit-content;
+      text-decoration: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.98);
     }
 
     /* Primary buttons: teal background and white text */
@@ -338,22 +353,33 @@
       border-color: #CBD5E1;
     }
 
-    .btn-success {
-      background: var(--primary);
-      color: #FFFFFF;
-      border-color: var(--primary);
+    .btn-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
     }
 
-    .btn-success:hover:not(:disabled) {
-      background: var(--primary-hover);
-      border-color: var(--primary-hover);
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
-      transform: translateY(-1px);
+    .btn-danger:hover:not(:disabled) {
+      background: #FEE2E2;
     }
 
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    .btn-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #FFFFFF;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* Live Progress & Loading Hero */
@@ -446,17 +472,9 @@
     }
 
     @keyframes pulseTitleGradient {
-      0% {
-        background-position: 0% 50%;
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.02);
-      }
-      100% {
-        background-position: 100% 50%;
-        transform: scale(1);
-      }
+      0% { background-position: 0% 50%; transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { background-position: 100% 50%; transform: scale(1); }
     }
 
     .loading-subtitle {
@@ -483,7 +501,7 @@
       50% { opacity: 0.35; transform: scale(0.8); }
     }
 
-    /* Fast Animated Progress Bar */
+    /* Honest Indeterminate Animated Progress Bar */
     .loading-bar-track {
       width: 100%;
       height: 8px;
@@ -493,12 +511,21 @@
       position: relative;
     }
 
-    .loading-bar-fill {
-      height: 100%;
+    .loading-bar-indeterminate {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
       background: linear-gradient(90deg, #0F766E 0%, #0D9488 50%, #F59E0B 100%);
       border-radius: 9999px;
-      transition: width 0.35s ease;
+      animation: indeterminateSweep 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       box-shadow: 0 0 10px rgba(15, 118, 110, 0.4);
+    }
+
+    @keyframes indeterminateSweep {
+      0% { left: -40%; width: 40%; }
+      50% { left: 20%; width: 60%; }
+      100% { left: 100%; width: 40%; }
     }
 
     .progress-box {
@@ -564,16 +591,6 @@
       font-family: var(--mono);
     }
 
-    .stage-item.current .stage-time {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .stage-item.done .stage-time {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.45; transform: scale(1.15); }
@@ -586,7 +603,7 @@
       background: var(--primary-light);
       color: var(--primary);
       border: 1px solid var(--primary-border);
-      padding: 0.2rem 0.6rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 6px;
       font-family: var(--mono);
       font-size: 0.75rem;
@@ -646,6 +663,16 @@
       border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 1rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .econ-metric.number-highlight {
+      animation: metricHighlight 0.4s ease-out;
+    }
+
+    @keyframes metricHighlight {
+      0% { background-color: #CCFBF1; }
+      100% { background-color: #F8FAFC; }
     }
 
     .econ-title {
@@ -663,7 +690,7 @@
       margin-top: 0.25rem;
     }
 
-    /* Experiment Proposal Card: Subtle teal border highlight */
+    /* Experiment Proposal Card */
     .experiment-card {
       border: 1px solid var(--primary);
       background: #FFFFFF;
@@ -774,6 +801,7 @@
 
     tr:last-child td { border-bottom: none; }
 
+    /* Modal Overlay & Content */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -798,6 +826,12 @@
       box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
       position: relative;
       color: var(--text);
+      animation: modalZoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalZoomIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .modal-close {
@@ -831,9 +865,280 @@
     }
 
     .alert-warning {
-      background: var(--warning-bg);
-      border: 1px solid var(--warning-border);
-      color: var(--warning-text); /* Navy text */
+      background: var(--accent-bg);
+      border: 1px solid var(--accent-border);
+      color: #0F172A; /* Navy text */
+    }
+
+    /* Evidence Ledger Styles */
+    .ledger-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .search-input-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+
+    .search-input-box input {
+      width: 100%;
+      padding-left: 2.2rem;
+    }
+
+    .search-icon-svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      background: #FFFFFF;
+      border: 1px solid var(--card-border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: #CBD5E1;
+      color: var(--text);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .evidence-accordion-item {
+      background: #FFFFFF;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      transition: border-color 0.15s ease;
+    }
+
+    .evidence-accordion-item:hover {
+      border-color: #CBD5E1;
+    }
+
+    .evidence-accordion-header {
+      padding: 0.9rem 1.15rem;
+      background: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      gap: 0.75rem;
+      user-select: none;
+    }
+
+    .evidence-accordion-header:hover {
+      background: #F8FAFC;
+    }
+
+    .evidence-accordion-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .evidence-accordion-body {
+      padding: 1.15rem;
+      border-top: 1px solid var(--card-border);
+      background: #FAFAFA;
+      display: none;
+      font-size: 0.88rem;
+    }
+
+    .evidence-accordion-body.open {
+      display: block;
+      animation: expandDown 0.2s ease-out;
+    }
+
+    @keyframes expandDown {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Checklist Styles */
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: all 0.15s ease;
+    }
+
+    .task-item:hover {
+      border-color: #CBD5E1;
+    }
+
+    .task-item.completed {
+      background: #F8FAFC;
+      opacity: 0.8;
+    }
+
+    .task-item.completed .task-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Toast System */
+    #toastContainer {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+      animation: slideUpToast 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 380px;
+    }
+
+    .toast-success {
+      background: #0F766E;
+    }
+
+    .toast-error {
+      background: #DC2626;
+    }
+
+    @keyframes slideUpToast {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Compare Screen Grid */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-col {
+      background: #FFFFFF;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .compare-col.offer-a {
+      border-top: 4px solid var(--primary);
+    }
+
+    .compare-col.offer-b {
+      border-top: 4px solid var(--accent);
+    }
+
+    /* Print Styles */
+    @media print {
+      header, .nav-tabs, #btnSubmitResearch, .ledger-controls,
+      .simulator-box, .btn, #toastContainer, .modal-overlay,
+      #quickDemoScenarios, #outcomeForm, #addTaskForm {
+        display: none !important;
+      }
+
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        font-size: 11pt;
+      }
+
+      .card {
+        border: 1px solid #CBD5E1 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 1.5rem !important;
+        padding: 1rem !important;
+      }
+
+      .screen {
+        display: block !important;
+      }
+
+      #screenSetup, #screenResearching, #screenCompare, #screenHistory {
+        display: none !important;
+      }
+
+      .evidence-accordion-body {
+        display: block !important;
+      }
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .loading-bar-indeterminate {
+        animation: none;
+        width: 100%;
+      }
+      .brand-title {
+        animation: none;
+      }
     }
 
     footer {
@@ -849,20 +1154,25 @@
 </head>
 <body>
 
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
   <!-- Header -->
   <header>
     <div class="header-container">
-      <div class="brand">
+      <a href="#" class="brand" onclick="showScreen('screenSetup'); return false;">
         <div class="brand-icon">D</div>
         <div>
           <div class="brand-title">DukaanPulse</div>
-          <div class="brand-subtitle">Live, cited research-to-action for independent cafés</div>
+          <div class="brand-subtitle">Live, cited research-to-action for independent merchants</div>
         </div>
-      </div>
+      </a>
       <nav class="nav-tabs" role="tablist">
         <button class="nav-btn active" id="tabSetup" onclick="showScreen('screenSetup')">1. Setup & Economics</button>
-        <button class="nav-btn" id="tabReport" onclick="showScreen('screenReport')" disabled>2. Evidence & Report</button>
-        <button class="nav-btn" id="tabTracker" onclick="showScreen('screenTracker')" disabled>3. Experiment Tracker</button>
+        <button class="nav-btn" id="tabCompare" onclick="showScreen('screenCompare')">2. Compare Offers</button>
+        <button class="nav-btn" id="tabReport" onclick="showScreen('screenReport')" disabled>3. Evidence & Report</button>
+        <button class="nav-btn" id="tabTracker" onclick="showScreen('screenTracker')" disabled>4. Experiment Tracker</button>
+        <button class="nav-btn" id="tabHistory" onclick="showScreen('screenHistory')">5. Research History</button>
       </nav>
     </div>
   </header>
@@ -875,7 +1185,7 @@
       <div id="errorText"></div>
     </div>
 
-    <!-- SCREEN 1: Setup & Input -->
+    <!-- SCREEN 1: Setup & Economics -->
     <section id="screenSetup" class="screen active">
       <div class="card">
         <div class="card-header">
@@ -883,11 +1193,11 @@
           <span class="badge badge-info">You.com Live Cited Grounding</span>
         </div>
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
-          Enter your café's location and what offer you wish to test. DukaanPulse retrieves public market evidence from You.com, evaluates your cost assumptions, and designs a low-risk, bounded experiment.
+          Enter your business location and the offer or decision you wish to test. DukaanPulse retrieves public market evidence from You.com, evaluates your unit economics, and designs a bounded, verifiable pilot experiment.
         </p>
 
         <!-- Quick Demo Scenarios Selector -->
-        <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <div id="quickDemoScenarios" style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
           <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">Quick Demo Scenarios:</span>
           <button type="button" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
           <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
@@ -898,7 +1208,7 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="inputCategory">Business Category *</label>
-              <input type="text" id="inputCategory" required value="Cafe" placeholder="e.g. Cafe, Bakery">
+              <input type="text" id="inputCategory" required value="Cafe" placeholder="e.g. Cafe, Bakery, Cloud Kitchen">
             </div>
 
             <div class="form-group">
@@ -913,7 +1223,7 @@
 
             <div class="form-group">
               <label for="inputBudget">Maximum Pilot Budget Ceiling (₹ INR) *</label>
-              <input type="number" id="inputBudget" min="100" max="1000000" step="50" required value="2000" onchange="syncEconomicsBudget()">
+              <input type="number" id="inputBudget" min="100" max="1000000" step="50" required value="2000" oninput="syncEconomicsBudget()">
             </div>
 
             <div class="form-group">
@@ -926,7 +1236,7 @@
           <div class="econ-box" style="margin-top: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
               <h3 style="font-size: 1rem; color: var(--text); font-weight: 700;">Owner-Entered Unit Economics (Assumptions)</h3>
-              <span class="badge badge-info">Deterministic Python Math</span>
+              <span class="badge badge-info">Deterministic Source of Truth</span>
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
               All costs below are strictly labeled as <em>Owner Assumptions</em>, distinct from web-retrieved market facts.
@@ -934,47 +1244,47 @@
 
             <div class="form-grid">
               <div class="form-group">
-                <label for="econPrice">Proposed Selling Price (₹/bundle) *</label>
+                <label for="econPrice">Selling Price per Order (₹) *</label>
                 <input type="number" id="econPrice" min="1" step="1" required value="179" oninput="liveUpdateEconomics()">
               </div>
               <div class="form-group">
-                <label for="econIng">Ingredient Cost (₹/bundle) *</label>
+                <label for="econIng">Ingredient Cost per Order (₹) *</label>
                 <input type="number" id="econIng" min="0" step="1" required value="50" oninput="liveUpdateEconomics()">
               </div>
               <div class="form-group">
-                <label for="econPkg">Packaging Cost (₹/bundle) *</label>
+                <label for="econPkg">Packaging Cost per Order (₹) *</label>
                 <input type="number" id="econPkg" min="0" step="1" required value="10" oninput="liveUpdateEconomics()">
               </div>
               <div class="form-group">
-                <label for="econOther">Other Variable Cost (₹/bundle)</label>
+                <label for="econOther">Other Variable Cost per Order (₹)</label>
                 <input type="number" id="econOther" min="0" step="1" value="5" oninput="liveUpdateEconomics()">
               </div>
               <div class="form-group">
-                <label for="econSetup">One-Time Pilot Cost (₹) [Signage, test batch]</label>
+                <label for="econSetup">One-Time Pilot Setup Cost (₹) [Signage, test batch]</label>
                 <input type="number" id="econSetup" min="0" step="10" value="450" oninput="liveUpdateEconomics()">
               </div>
               <div class="form-group">
-                <label for="econQty">Planned Pilot Quantity (units)</label>
+                <label for="econQty">Planned Pilot Orders (Units)</label>
                 <input type="number" id="econQty" min="1" step="1" value="20" oninput="liveUpdateEconomics()">
               </div>
             </div>
 
-            <!-- Live Calculation Summary Card -->
+            <!-- Live Calculation Summary Grid -->
             <div class="econ-grid" id="liveEconCard">
-              <div class="econ-metric">
+              <div class="econ-metric" id="metricVarCost">
                 <div class="econ-title">Variable Cost / Order</div>
                 <div class="econ-val" id="liveVarCost">₹65.00</div>
               </div>
-              <div class="econ-metric">
+              <div class="econ-metric" id="metricContrib">
                 <div class="econ-title">Contribution / Order</div>
                 <div class="econ-val" style="color: var(--primary);" id="liveContrib">₹114.00</div>
               </div>
-              <div class="econ-metric">
+              <div class="econ-metric" id="metricMargin">
                 <div class="econ-title">Gross Margin %</div>
                 <div class="econ-val" id="liveMargin">63.7%</div>
               </div>
-              <div class="econ-metric">
-                <div class="econ-title">Break-Even on Setup</div>
+              <div class="econ-metric" id="metricBreakEven">
+                <div class="econ-title">Orders to Cover Setup Cost</div>
                 <div class="econ-val" id="liveBreakEven">4 orders</div>
               </div>
             </div>
@@ -982,21 +1292,26 @@
             <div id="liveGuidanceBox" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46;">
               FINANCIALLY VIABLE. Generates positive contribution of ₹114.00 per bundle (63.7% margin). 4 orders required to recover one-time setup cost.
             </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <span>• Contribution margin is not net profit (excludes fixed overhead like rent & staff).</span>
+              <span>• Planned pilot orders represents test batch quantity, not guaranteed customer demand.</span>
+            </div>
           </div>
 
           <div style="margin-top: 1.75rem; display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
             <button type="submit" class="btn btn-primary" id="btnSubmitResearch">
-              <span>Execute Live Research</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span id="btnSubmitResearchText">Execute Live Research</span>
+              <svg id="btnSubmitResearchIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
         </form>
       </div>
     </section>
 
-    <!-- SCREEN 2: Live Research Progress -->
+    <!-- SCREEN 2: Live Research Progress (Honest Indeterminate) -->
     <section id="screenResearching" class="screen">
-      <div class="card" style="text-align: center; padding: 2.5rem 1.75rem;">
+      <div class="card" style="text-align: center; padding: 2.75rem 1.75rem;">
         
         <!-- Animated Pulse Radar & App Title -->
         <div class="loading-hero">
@@ -1015,56 +1330,54 @@
           </p>
         </div>
 
-        <!-- Fast Animated Progress Bar -->
+        <!-- Honest Indeterminate Animated Progress Bar -->
         <div style="max-width: 650px; margin: 1.75rem auto 1rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
-            <span style="font-weight: 600; color: var(--text);" id="progressStatusText">Starting market research pipeline...</span>
-            <span class="badge badge-info" id="searchTimer" style="font-family: var(--mono); font-size: 0.8rem;">0.0s</span>
+            <span style="font-weight: 600; color: var(--text);" id="progressStatusText">Querying You.com live web index & evaluating unit economics...</span>
+            <span class="badge badge-info" id="searchTimer" style="font-family: var(--mono); font-size: 0.8rem;">0.0s elapsed</span>
           </div>
           <div class="loading-bar-track">
-            <div class="loading-bar-fill" id="researchProgressBar" style="width: 15%;"></div>
+            <div class="loading-bar-indeterminate"></div>
           </div>
         </div>
 
-        <!-- 5-Stage Fast Progress Stepper -->
+        <!-- Honest Progress Pipeline Architecture -->
         <div class="progress-box" style="max-width: 650px; margin: 1.25rem auto 0; text-align: left;">
-          <div class="stage-item current" id="stage1">
-            <div class="stage-left">
-              <div class="stage-dot"></div>
-              <span class="stage-label" id="stageLabel1">1. Validating merchant parameters & budget ceiling</span>
-            </div>
-            <span class="stage-time" id="stageTime1">Active</span>
+          <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.75rem;">
+            Active Processing Pipeline:
           </div>
-          <div class="stage-item" id="stage2">
+          <div class="stage-item current">
             <div class="stage-left">
               <div class="stage-dot"></div>
-              <span class="stage-label" id="stageLabel2">2. Querying You.com live web index (concurrent searches)</span>
+              <span>1. Validating merchant constraints & budget ceiling</span>
             </div>
-            <span class="stage-time" id="stageTime2">Waiting</span>
+            <span class="stage-time">Active</span>
           </div>
-          <div class="stage-item" id="stage3">
+          <div class="stage-item current">
             <div class="stage-left">
               <div class="stage-dot"></div>
-              <span class="stage-label" id="stageLabel3">3. Normalizing source URLs & deduplicating evidence items</span>
+              <span>2. Retrieving live web evidence from You.com Search index</span>
             </div>
-            <span class="stage-time" id="stageTime3">Waiting</span>
+            <span class="stage-time">Active</span>
           </div>
-          <div class="stage-item" id="stage4">
+          <div class="stage-item current">
             <div class="stage-left">
               <div class="stage-dot"></div>
-              <span class="stage-label" id="stageLabel4">4. Grounded AI synthesis & quote verification</span>
+              <span>3. Grounded AI synthesis & exact quote citation verification</span>
             </div>
-            <span class="stage-time" id="stageTime4">Waiting</span>
+            <span class="stage-time">Active</span>
           </div>
-          <div class="stage-item" id="stage5">
+          <div class="stage-item current">
             <div class="stage-left">
               <div class="stage-dot"></div>
-              <span class="stage-label" id="stageLabel5">5. Persisting verified findings & SQLite experiment ledger</span>
+              <span>4. Validating bounded pilot proposal & SQLite persistence</span>
             </div>
-            <span class="stage-time" id="stageTime5">Waiting</span>
+            <span class="stage-time">Active</span>
           </div>
         </div>
-
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">
+          Live requests typically complete in 3–8 seconds depending on web search latency.
+        </p>
       </div>
     </section>
 
@@ -1076,10 +1389,14 @@
             <div class="card-title" id="reportHeaderTitle">Market Research & Economics Report</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="reportMetaInfo"></div>
           </div>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="printSOPCard()">
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;" onclick="exportResearchCSV()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;" onclick="window.print()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              <span>Print Staff SOP Card</span>
+              <span>Print / PDF</span>
             </button>
             <span class="badge badge-ready" id="reportStatusBadge">Verified Grounded</span>
           </div>
@@ -1096,7 +1413,7 @@
 
         <!-- 1. Factual Observations with Evidence Chips -->
         <h3 style="font-size: 1rem; color: var(--primary); margin-bottom: 0.75rem;">
-          1. Factual Market Observations (Click chip to inspect You.com excerpt)
+          1. Factual Market Observations (Click chip or explore ledger below)
         </h3>
         <div id="observationsContainer"></div>
 
@@ -1113,7 +1430,7 @@
           <div class="simulator-box">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
               <strong style="color: var(--accent-dark); font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">See what happens if supplier ingredient costs surge</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">See what happens if supplier costs surge</span>
             </div>
             <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
               <label for="simIngredientCost" style="font-size: 0.8rem;">Simulate Ingredient Cost (₹):</label>
@@ -1171,7 +1488,7 @@
               By accepting, you lock this experiment and its snapshot of cost assumptions into SQLite storage and launch the measurement tracker.
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn btn-secondary" style="font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
+              <button type="button" class="btn btn-secondary" style="font-size: 0.85rem;" onclick="printSOPCard()">Print Staff SOP</button>
               <button class="btn btn-primary" id="btnAcceptExperiment" onclick="acceptExperiment()">
                 <span>Approve & Accept Experiment</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1180,15 +1497,45 @@
           </div>
         </div>
 
-        <!-- 6. Limitations & Disclaimers -->
-        <div style="margin-top: 1.5rem;">
+        <!-- 6. Searchable Evidence Ledger (Feature 6) -->
+        <div style="margin-top: 2rem; border-top: 1px solid var(--card-border); padding-top: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <h3 style="font-size: 1.05rem; color: var(--text); font-weight: 700;">6. Searchable Evidence Ledger</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="evidenceCountLabel">Showing all sources</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+            All public web evidence retrieved via You.com. Uncited sources are preserved for broad market context and are not false. Search snippets are excerpts, not full-page verifications.
+          </p>
+
+          <!-- Search & Filter Controls -->
+          <div class="ledger-controls">
+            <div class="search-input-box">
+              <svg class="search-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="evidenceSearchInput" placeholder="Search by title, domain, or snippet keyword..." oninput="filterEvidenceList()">
+            </div>
+            <div class="filter-pills">
+              <button type="button" class="filter-pill active" id="pillAll" onclick="setEvidenceFilter('all')">All (<span id="countPillAll">0</span>)</button>
+              <button type="button" class="filter-pill" id="pillCited" onclick="setEvidenceFilter('cited')">Cited in Report (<span id="countPillCited">0</span>)</button>
+              <button type="button" class="filter-pill" id="pillUncited" onclick="setEvidenceFilter('uncited')">Uncited (<span id="countPillUncited">0</span>)</button>
+              <button type="button" class="filter-pill" id="pillDate" onclick="setEvidenceFilter('has_date')">Date Available (<span id="countPillDate">0</span>)</button>
+              <button type="button" class="filter-pill" id="pillNoDate" onclick="setEvidenceFilter('no_date')">Date Unavailable (<span id="countPillNoDate">0</span>)</button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.25rem 0.65rem; font-size: 0.78rem;" onclick="clearEvidenceFilters()">Clear</button>
+            </div>
+          </div>
+
+          <!-- Evidence Accordion Container -->
+          <div id="evidenceListContainer" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- 7. Limitations & Disclaimers -->
+        <div style="margin-top: 1.5rem; border-top: 1px solid var(--card-border); padding-top: 1.25rem;">
           <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">Methodology Limitations</h4>
           <ul id="limitationsList" style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.8rem;"></ul>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 4: Active Experiment & Outcome Tracker -->
+    <!-- SCREEN 4: Active Experiment & Outcome Tracker (with Task Checklist) -->
     <section id="screenTracker" class="screen">
       <div class="card">
         <div class="card-header">
@@ -1196,8 +1543,12 @@
             <div class="card-title" id="trackerExpTitle">Active Business Experiment</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="trackerExpMeta"></div>
           </div>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="printSOPCard()">
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;" onclick="exportExperimentCSV()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;" onclick="printSOPCard()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               <span>Print Staff SOP</span>
             </button>
@@ -1209,6 +1560,35 @@
         <div style="background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
           <strong style="color: var(--primary);">Approved Assumptions at Acceptance:</strong>
           <div id="trackerAssumptions" style="color: var(--text); margin-top: 0.25rem;"></div>
+        </div>
+
+        <!-- Actionable Operational Task Checklist (Feature 8) -->
+        <div class="card" style="border: 1px solid var(--card-border); background: #FFFFFF; padding: 1.25rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <div>
+              <h4 style="font-size: 0.98rem; font-weight: 700; color: var(--text);">Actionable Operational Checklist</h4>
+              <span style="font-size: 0.8rem; color: var(--text-muted);" id="taskProgressText">0 of 0 tasks completed (0%)</span>
+            </div>
+            <div style="width: 140px;">
+              <div class="loading-bar-track" style="height: 6px;">
+                <div class="loading-bar-fill" id="taskProgressBar" style="width: 0%; background: var(--primary);"></div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Track kitchen prep, customer verification, and execution steps. Checklist tracks operational task completion; completing all tasks does not prove profitability.
+          </p>
+
+          <!-- Task List Container -->
+          <div id="taskListContainer" style="margin-bottom: 1rem;"></div>
+
+          <!-- Add Owner Task Form -->
+          <form id="addTaskForm" onsubmit="handleAddTask(event)" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="newTaskTitle" placeholder="Add custom owner action item (e.g. Laminate morning menu board)..." required style="flex: 1; font-size: 0.85rem; padding: 0.5rem 0.75rem;">
+            <button type="submit" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.5rem 0.9rem;">
+              <span>Add Task</span>
+            </button>
+          </form>
         </div>
 
         <!-- Financial KPI Dashboard -->
@@ -1296,11 +1676,235 @@
       </div>
     </section>
 
+    <!-- SCREEN 5: Compare Two Offers (Feature 5) -->
+    <section id="screenCompare" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">2. Compare Two Owner-Defined Offers</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Deterministic side-by-side unit economics under identical budget ceilings
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;" onclick="loadComparisonPreset()">
+            <span>Load Breakfast vs Croissant Preset</span>
+          </button>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Evaluate two distinct product configurations side-by-side. Calculations use the exact same deterministic Python backend model as the primary research pipeline.
+        </p>
+
+        <!-- Shared Pilot Budget Ceiling -->
+        <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <label for="cmpBudget" style="font-weight: 700; color: var(--text);">Shared Pilot Budget Ceiling (₹ INR) *</label>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Maximum budget available to run either pilot</div>
+          </div>
+          <input type="number" id="cmpBudget" min="100" max="1000000" step="50" value="2000" style="width: 140px; font-weight: 700;" oninput="runOfferComparison()">
+        </div>
+
+        <!-- Two Offer Inputs Form -->
+        <div class="compare-grid">
+          <!-- Offer A Column -->
+          <div class="compare-col offer-a">
+            <h4 style="color: var(--primary); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.85rem;">Offer A Profile</h4>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpNameA">Offer Name *</label>
+              <input type="text" id="cmpNameA" value="Weekday Breakfast Bundle" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpPriceA">Selling Price per Order (₹) *</label>
+              <input type="number" id="cmpPriceA" value="179" min="1" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpIngA">Ingredient Cost (₹) *</label>
+              <input type="number" id="cmpIngA" value="50" min="0" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpPkgA">Packaging Cost (₹) *</label>
+              <input type="number" id="cmpPkgA" value="10" min="0" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpOtherA">Other Variable Cost (₹)</label>
+              <input type="number" id="cmpOtherA" value="5" min="0" step="1" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpSetupA">One-Time Pilot Cost (₹)</label>
+              <input type="number" id="cmpSetupA" value="450" min="0" step="10" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpQtyA">Planned Pilot Orders (Units)</label>
+              <input type="number" id="cmpQtyA" value="20" min="1" step="1" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group">
+              <label for="cmpNotesA">Operational Constraints / Notes</label>
+              <input type="text" id="cmpNotesA" value="Standard kitchen equipment, 15 min prep" oninput="runOfferComparison()">
+            </div>
+          </div>
+
+          <!-- Offer B Column -->
+          <div class="compare-col offer-b">
+            <h4 style="color: var(--accent-dark); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.85rem;">Offer B Profile</h4>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpNameB">Offer Name *</label>
+              <input type="text" id="cmpNameB" value="Artisanal Croissant Box" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpPriceB">Selling Price per Order (₹) *</label>
+              <input type="number" id="cmpPriceB" value="220" min="1" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpIngB">Ingredient Cost (₹) *</label>
+              <input type="number" id="cmpIngB" value="85" min="0" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpPkgB">Packaging Cost (₹) *</label>
+              <input type="number" id="cmpPkgB" value="18" min="0" step="1" required oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpOtherB">Other Variable Cost (₹)</label>
+              <input type="number" id="cmpOtherB" value="5" min="0" step="1" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpSetupB">One-Time Pilot Cost (₹)</label>
+              <input type="number" id="cmpSetupB" value="300" min="0" step="10" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="cmpQtyB">Planned Pilot Orders (Units)</label>
+              <input type="number" id="cmpQtyB" value="15" min="1" step="1" oninput="runOfferComparison()">
+            </div>
+            <div class="form-group">
+              <label for="cmpNotesB">Operational Constraints / Notes</label>
+              <input type="text" id="cmpNotesB" value="Morning baking shift from 6 AM, oven sharing" oninput="runOfferComparison()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparative Output Table & Neutral Guidance -->
+        <div style="margin-top: 1.5rem;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem;">Side-by-Side Economics Comparison</h4>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Financial Metric</th>
+                  <th style="color: var(--primary);" id="colHeaderA">Offer A</th>
+                  <th style="color: var(--accent-dark);" id="colHeaderB">Offer B</th>
+                  <th>Variance / Difference</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonTableBody">
+                <tr>
+                  <td>Selling Price / Order</td>
+                  <td id="resPriceA">₹179.00</td>
+                  <td id="resPriceB">₹220.00</td>
+                  <td id="resDiffPrice">+₹41.00 for B</td>
+                </tr>
+                <tr>
+                  <td>Total Variable Cost / Order</td>
+                  <td id="resVarCostA">₹65.00</td>
+                  <td id="resVarCostB">₹108.00</td>
+                  <td id="resDiffVarCost">₹43.00 higher for B</td>
+                </tr>
+                <tr>
+                  <td><strong>Contribution Margin / Order</strong></td>
+                  <td id="resContribA" style="font-weight: 700; color: var(--primary);">₹114.00</td>
+                  <td id="resContribB" style="font-weight: 700; color: var(--accent-dark);">₹112.00</td>
+                  <td id="resDiffContrib" style="font-weight: 700;">+₹2.00 higher for A</td>
+                </tr>
+                <tr>
+                  <td>Gross Margin %</td>
+                  <td id="resMarginA">63.7%</td>
+                  <td id="resMarginB">50.9%</td>
+                  <td id="resDiffMargin">+12.8% for A</td>
+                </tr>
+                <tr>
+                  <td>Estimated Total Pilot Spending</td>
+                  <td id="resPilotCostA">₹1,750.00</td>
+                  <td id="resPilotCostB">₹1,920.00</td>
+                  <td id="resDiffPilotCost">₹170.00 lower for A</td>
+                </tr>
+                <tr>
+                  <td>Budget Ceiling Status</td>
+                  <td id="resBudgetA"><span class="badge badge-ready">Within Budget</span></td>
+                  <td id="resBudgetB"><span class="badge badge-ready">Within Budget</span></td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Orders Needed to Cover Setup</td>
+                  <td id="resBreakEvenA">4 orders</td>
+                  <td id="resBreakEvenB">3 orders</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Neutral Evaluation Guidance Banner -->
+          <div id="compareGuidanceBox" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; font-size: 0.88rem; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46;">
+            <strong>Comparative Assessment:</strong> Offer A has a slightly higher contribution per order (₹114.00 vs ₹112.00) under entered assumptions.
+          </div>
+
+          <!-- Managerial Disclaimer -->
+          <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.85rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+            <strong>Managerial Truth & Scope Notice:</strong>
+            Customer demand, price sensitivity, and operational kitchen feasibility are not proven by this calculator. Higher contribution per order does not guarantee higher total profits if customer order volume is significantly lower.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 6: Research History & Archive (Feature 7) -->
+    <section id="screenHistory" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">5. Research History & Local Archive</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Saved research runs stored in SQLite
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;" onclick="loadResearchHistory()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            <span>Refresh History</span>
+          </button>
+        </div>
+
+        <!-- Single-user Notice Banner -->
+        <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--text-muted);">
+          <strong>Local Single-User Ledger:</strong> This dashboard is a single-merchant system storing records locally in SQLite. Opening previous research runs loads verified reports directly from disk and <em>never consumes third-party API search credits</em>.
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Research Question</th>
+                <th>Category & Locality</th>
+                <th>Retrieval Date</th>
+                <th>Report Status</th>
+                <th>Experiment</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                  Loading historical research runs...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Evidence Inspector Modal -->
+  <!-- Evidence Inspector Modal (Accessible) -->
   <div id="evidenceModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalEvidenceTitle">
-    <div class="modal-content">
+    <div class="modal-content" id="modalContentBox">
       <button class="modal-close" onclick="closeEvidenceModal()" aria-label="Close modal">&times;</button>
       <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
         <span class="chip" id="modalEvidenceBadge">E1</span>
@@ -1320,7 +1924,8 @@
         <p id="modalEvidenceSnippet" style="color: var(--text); font-size: 0.9rem; line-height: 1.5;"></p>
       </div>
 
-      <div style="display: flex; justify-content: flex-end;">
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;" onclick="closeEvidenceModal()">Close</button>
         <a id="modalEvidenceLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
           <span>Visit Verified Source</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
@@ -1339,6 +1944,8 @@
     let currentResearch = null;
     let currentExperiment = null;
     let evidenceMap = new Map();
+    let currentEvidenceFilter = 'all';
+    let lastActiveElement = null;
     let searchTimerInterval = null;
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1346,8 +1953,31 @@
       const outDateInput = document.getElementById('outDate');
       if (outDateInput) outDateInput.value = today;
       liveUpdateEconomics();
+      runOfferComparison();
     });
 
+    // Toast Notifications System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      const icon = type === 'success' 
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+      
+      toast.innerHTML = `${icon}<span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.2s ease';
+        setTimeout(() => toast.remove(), 200);
+      }, 3500);
+    }
+
+    // Screen Switching
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(screenId);
@@ -1355,8 +1985,14 @@
 
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       if (screenId === 'screenSetup') document.getElementById('tabSetup').classList.add('active');
+      if (screenId === 'screenCompare') document.getElementById('tabCompare').classList.add('active');
       if (screenId === 'screenReport') document.getElementById('tabReport').classList.add('active');
       if (screenId === 'screenTracker') document.getElementById('tabTracker').classList.add('active');
+      if (screenId === 'screenHistory') {
+        document.getElementById('tabHistory').classList.add('active');
+        loadResearchHistory();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function showError(msg) {
@@ -1414,29 +2050,73 @@
         document.getElementById('econQty').value = '20';
       }
       liveUpdateEconomics();
+      showToast('Loaded scenario parameters', 'success');
     }
 
     // Live Deterministic Economics calculation on setup screen
     function liveUpdateEconomics() {
-      const price = parseFloat(document.getElementById('econPrice').value) || 0;
-      const ing = parseFloat(document.getElementById('econIng').value) || 0;
-      const pkg = parseFloat(document.getElementById('econPkg').value) || 0;
-      const other = parseFloat(document.getElementById('econOther').value) || 0;
-      const setup = parseFloat(document.getElementById('econSetup').value) || 0;
-      const budget = parseFloat(document.getElementById('inputBudget').value) || 2000;
-      const qty = parseInt(document.getElementById('econQty').value, 10) || 1;
+      const priceInput = document.getElementById('econPrice');
+      const ingInput = document.getElementById('econIng');
+      const pkgInput = document.getElementById('econPkg');
+      const otherInput = document.getElementById('econOther');
+      const setupInput = document.getElementById('econSetup');
+      const budgetInput = document.getElementById('inputBudget');
+      const qtyInput = document.getElementById('econQty');
+
+      // Validation
+      let isValid = true;
+      [priceInput, ingInput, pkgInput, otherInput, setupInput, budgetInput, qtyInput].forEach(inp => {
+        if (!inp) return;
+        const val = parseFloat(inp.value);
+        if (isNaN(val) || val < 0) {
+          inp.classList.add('input-invalid');
+          isValid = false;
+        } else {
+          inp.classList.remove('input-invalid');
+        }
+      });
+
+      const price = parseFloat(priceInput.value) || 0;
+      const ing = parseFloat(ingInput.value) || 0;
+      const pkg = parseFloat(pkgInput.value) || 0;
+      const other = parseFloat(otherInput.value) || 0;
+      const setup = parseFloat(setupInput.value) || 0;
+      const budget = parseFloat(budgetInput.value) || 2000;
+      const qty = parseInt(qtyInput.value, 10) || 1;
 
       const varCost = ing + pkg + other;
       const contrib = price - varCost;
       const margin = price > 0 ? ((contrib / price) * 100).toFixed(1) : '0.0';
 
-      document.getElementById('liveVarCost').textContent = `₹${varCost.toFixed(2)}`;
+      const liveVarEl = document.getElementById('liveVarCost');
       const contribEl = document.getElementById('liveContrib');
-      contribEl.textContent = `₹${contrib.toFixed(2)}`;
-      document.getElementById('liveMargin').textContent = `${margin}%`;
-
+      const marginEl = document.getElementById('liveMargin');
       const breakEvenEl = document.getElementById('liveBreakEven');
       const guidanceBox = document.getElementById('liveGuidanceBox');
+
+      liveVarEl.textContent = `₹${varCost.toFixed(2)}`;
+      contribEl.textContent = `₹${contrib.toFixed(2)}`;
+      marginEl.textContent = `${margin}%`;
+
+      // Trigger subtle highlight animation
+      ['metricVarCost', 'metricContrib', 'metricMargin', 'metricBreakEven'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('number-highlight');
+          void el.offsetWidth; // re-flow
+          el.classList.add('number-highlight');
+        }
+      });
+
+      if (!isValid || price <= 0) {
+        contribEl.style.color = 'var(--danger-text)';
+        breakEvenEl.textContent = 'Invalid Input';
+        guidanceBox.style.background = '#FEF2F2';
+        guidanceBox.style.border = '1px solid #FECACA';
+        guidanceBox.style.color = '#991B1B';
+        guidanceBox.textContent = 'INVALID PARAMETERS. Ensure selling price > 0 and all costs are positive numbers.';
+        return;
+      }
 
       if (contrib > 0) {
         contribEl.style.color = 'var(--primary)';
@@ -1461,36 +2141,11 @@
         guidanceBox.style.background = '#FEF2F2';
         guidanceBox.style.border = '1px solid #FECACA';
         guidanceBox.style.color = '#991B1B';
-        guidanceBox.textContent = `DO NOT LAUNCH. Unit variable costs (₹${varCost.toFixed(2)}) equal or exceed selling price (₹${price.toFixed(2)}). Every order loses money.`;
+        guidanceBox.textContent = `DO NOT LAUNCH. Unit variable costs (₹${varCost.toFixed(2)}) equal or exceed selling price (₹${price.toFixed(2)}). Every order loses money under current assumptions.`;
       }
     }
 
-    function setStage(index, progressPct, statusText) {
-      for (let i = 1; i <= 5; i++) {
-        const item = document.getElementById(`stage${i}`);
-        const timeEl = document.getElementById(`stageTime${i}`);
-        if (!item) continue;
-        item.classList.remove('current', 'done');
-        if (i < index) {
-          item.classList.add('done');
-          if (timeEl) timeEl.textContent = 'Done ✓';
-        } else if (i === index) {
-          item.classList.add('current');
-          if (timeEl) timeEl.textContent = 'Active';
-        } else {
-          if (timeEl) timeEl.textContent = 'Waiting';
-        }
-      }
-      const progressBar = document.getElementById('researchProgressBar');
-      if (progressBar && progressPct !== undefined) {
-        progressBar.style.width = `${progressPct}%`;
-      }
-      const progressText = document.getElementById('progressStatusText');
-      if (progressText && statusText) {
-        progressText.textContent = statusText;
-      }
-    }
-
+    // Research Flow
     async function handleFormSubmit(e) {
       e.preventDefault();
       clearError();
@@ -1519,19 +2174,17 @@
 
       showScreen('screenResearching');
       const submitBtn = document.getElementById('btnSubmitResearch');
+      const btnText = document.getElementById('btnSubmitResearchText');
+      const btnIcon = document.getElementById('btnSubmitResearchIcon');
       submitBtn.disabled = true;
+      btnText.textContent = 'Researching...';
+      btnIcon.innerHTML = '<span class="btn-spinner"></span>';
 
       const startTime = performance.now();
-      setStage(1, 15, 'Validating merchant parameters & budget ceiling...');
-
-      const t1 = setTimeout(() => setStage(2, 40, 'Querying You.com live web index (concurrent searches)...'), 250);
-      const t2 = setTimeout(() => setStage(3, 65, 'Normalizing source URLs & deduplicating evidence items...'), 650);
-      const t3 = setTimeout(() => setStage(4, 85, 'Executing grounded AI synthesis & quote verification...'), 1100);
-
       if (searchTimerInterval) clearInterval(searchTimerInterval);
       searchTimerInterval = setInterval(() => {
         const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
-        document.getElementById('searchTimer').textContent = `${elapsed}s`;
+        document.getElementById('searchTimer').textContent = `${elapsed}s elapsed`;
       }, 100);
 
       try {
@@ -1547,37 +2200,25 @@
           throw new Error(data.detail || `Server returned error status ${res.status}`);
         }
 
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-        setStage(5, 100, 'Persisting verified findings to SQLite ledger...');
-
         currentResearch = data;
         renderReport(data);
 
         document.getElementById('tabReport').disabled = false;
-        setTimeout(() => {
-          showScreen('screenReport');
-        }, 220);
+        showToast('Research report generated & saved to SQLite', 'success');
+        showScreen('screenReport');
 
       } catch (err) {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
         showError(err.message || 'An unexpected error occurred during research.');
         showScreen('screenSetup');
       } finally {
         clearInterval(searchTimerInterval);
         submitBtn.disabled = false;
-      }
-    }
-        showScreen('screenSetup');
-      } finally {
-        clearInterval(searchTimerInterval);
-        submitBtn.disabled = false;
+        btnText.textContent = 'Execute Live Research';
+        btnIcon.innerHTML = '<path d="M5 12h14M12 5l7 7-7 7"/>';
       }
     }
 
+    // Render Research Report
     function renderReport(data) {
       evidenceMap.clear();
       if (data.evidence) {
@@ -1586,7 +2227,7 @@
 
       const report = data.report;
       document.getElementById('reportHeaderTitle').textContent = `${data.category} in ${data.locality}`;
-      document.getElementById('reportMetaInfo').textContent = `Research ID: ${data.research_id} | Created: ${new Date(data.created_at).toLocaleString()}`;
+      document.getElementById('reportMetaInfo').textContent = `Research ID: ${data.research_id} | Retrieved: ${new Date(data.created_at).toLocaleString()}`;
 
       const statusBadge = document.getElementById('reportStatusBadge');
       if (report.status === 'ready') {
@@ -1730,7 +2371,10 @@
         });
       }
 
-      // 6. Limitations
+      // 6. Searchable Evidence Ledger
+      renderEvidenceLedger();
+
+      // 7. Limitations
       const limitsList = document.getElementById('limitationsList');
       limitsList.innerHTML = '';
       (report.limitations || []).forEach(l => {
@@ -1740,6 +2384,195 @@
       });
     }
 
+    // Feature 6: Searchable Evidence Ledger
+    function renderEvidenceLedger() {
+      if (!currentResearch || !currentResearch.evidence) return;
+      
+      const allEvidence = currentResearch.evidence;
+      const citedIds = new Set();
+      if (currentResearch.report && currentResearch.report.observations) {
+        currentResearch.report.observations.forEach(o => {
+          o.evidence_ids.forEach(eid => citedIds.add(eid));
+        });
+      }
+
+      // Update count pills
+      document.getElementById('countPillAll').textContent = allEvidence.length;
+      document.getElementById('countPillCited').textContent = citedIds.size;
+      document.getElementById('countPillUncited').textContent = Math.max(0, allEvidence.length - citedIds.size);
+      
+      let dateCount = 0;
+      allEvidence.forEach(e => { if (e.source_date) dateCount++; });
+      document.getElementById('countPillDate').textContent = dateCount;
+      document.getElementById('countPillNoDate').textContent = allEvidence.length - dateCount;
+
+      filterEvidenceList();
+    }
+
+    function setEvidenceFilter(filterType) {
+      currentEvidenceFilter = filterType;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      if (filterType === 'all') document.getElementById('pillAll').classList.add('active');
+      if (filterType === 'cited') document.getElementById('pillCited').classList.add('active');
+      if (filterType === 'uncited') document.getElementById('pillUncited').classList.add('active');
+      if (filterType === 'has_date') document.getElementById('pillDate').classList.add('active');
+      if (filterType === 'no_date') document.getElementById('pillNoDate').classList.add('active');
+      filterEvidenceList();
+    }
+
+    function clearEvidenceFilters() {
+      document.getElementById('evidenceSearchInput').value = '';
+      setEvidenceFilter('all');
+    }
+
+    function filterEvidenceList() {
+      if (!currentResearch || !currentResearch.evidence) return;
+      const query = (document.getElementById('evidenceSearchInput').value || '').trim().toLowerCase();
+      const container = document.getElementById('evidenceListContainer');
+      container.innerHTML = '';
+
+      const citedIds = new Set();
+      if (currentResearch.report && currentResearch.report.observations) {
+        currentResearch.report.observations.forEach(o => {
+          o.evidence_ids.forEach(eid => citedIds.add(eid));
+        });
+      }
+
+      const filtered = currentResearch.evidence.filter(item => {
+        const isCited = citedIds.has(item.evidence_id);
+        const hasDate = !!item.source_date;
+
+        if (currentEvidenceFilter === 'cited' && !isCited) return false;
+        if (currentEvidenceFilter === 'uncited' && isCited) return false;
+        if (currentEvidenceFilter === 'has_date' && !hasDate) return false;
+        if (currentEvidenceFilter === 'no_date' && hasDate) return false;
+
+        if (query) {
+          const matchTitle = (item.title || '').toLowerCase().includes(query);
+          const matchSnippet = (item.snippet || '').toLowerCase().includes(query);
+          const matchDomain = (item.domain || '').toLowerCase().includes(query);
+          const matchId = (item.evidence_id || '').toLowerCase().includes(query);
+          if (!matchTitle && !matchSnippet && !matchDomain && !matchId) return false;
+        }
+
+        return true;
+      });
+
+      document.getElementById('evidenceCountLabel').textContent = `Showing ${filtered.length} of ${currentResearch.evidence.length} sources`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background: #F8FAFC; border: 1px dashed var(--card-border); padding: 2rem; border-radius: 8px; text-align: center; color: var(--text-muted);">
+            No evidence items match your search or filter. <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.2rem 0.6rem; margin-left: 0.5rem;" onclick="clearEvidenceFilters()">Reset Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const isCited = citedIds.has(item.evidence_id);
+        const accordion = document.createElement('div');
+        accordion.className = 'evidence-accordion-item';
+
+        const header = document.createElement('div');
+        header.className = 'evidence-accordion-header';
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('aria-expanded', 'false');
+
+        const titleSpan = document.createElement('div');
+        titleSpan.className = 'evidence-accordion-title';
+        titleSpan.innerHTML = `
+          <span class="chip" style="margin-left: 0;">${item.evidence_id}</span>
+          <span>${item.title || 'Source Evidence'}</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(${item.domain})</span>
+          ${isCited ? '<span class="badge badge-ready" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Cited</span>' : '<span class="badge badge-info" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">Uncited Context</span>'}
+        `;
+
+        const chevron = document.createElement('div');
+        chevron.style.color = 'var(--text-muted)';
+        chevron.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+
+        header.appendChild(titleSpan);
+        header.appendChild(chevron);
+
+        const body = document.createElement('div');
+        body.className = 'evidence-accordion-body';
+        body.innerHTML = `
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+            <strong>Query:</strong> ${item.query} | 
+            <strong>Retrieved:</strong> ${new Date(item.retrieved_at).toLocaleString()} | 
+            <strong>Date:</strong> ${item.source_date || 'Not explicitly reported'}
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 6px; padding: 0.75rem; font-size: 0.85rem; line-height: 1.5; color: var(--text); margin-bottom: 0.75rem;">
+            "${item.snippet}"
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+              <span>Visit Verified Link</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+          </div>
+        `;
+
+        header.onclick = () => {
+          const isOpen = body.classList.toggle('open');
+          header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0)';
+          chevron.style.transition = 'transform 0.15s ease';
+        };
+
+        header.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            header.click();
+          }
+        };
+
+        accordion.appendChild(header);
+        accordion.appendChild(body);
+        container.appendChild(accordion);
+      });
+    }
+
+    // Modal Operations
+    function openEvidenceModal(evidenceId) {
+      const item = evidenceMap.get(evidenceId);
+      if (!item) return;
+
+      lastActiveElement = document.activeElement;
+
+      document.getElementById('modalEvidenceBadge').textContent = item.evidence_id;
+      document.getElementById('modalEvidenceTitle').textContent = item.title || 'Source Evidence';
+      document.getElementById('modalEvidenceQuery').textContent = item.query;
+      document.getElementById('modalEvidenceRetrieved').textContent = new Date(item.retrieved_at).toLocaleString();
+      document.getElementById('modalEvidenceDate').textContent = item.source_date || 'Not explicitly reported';
+      document.getElementById('modalEvidenceSnippet').textContent = item.snippet;
+
+      const linkEl = document.getElementById('modalEvidenceLink');
+      if (item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'))) {
+        linkEl.href = item.url;
+        linkEl.style.display = 'inline-flex';
+      } else {
+        linkEl.style.display = 'none';
+      }
+
+      const modal = document.getElementById('evidenceModal');
+      modal.classList.add('active');
+      modal.querySelector('.modal-close').focus();
+    }
+
+    function closeEvidenceModal() {
+      const modal = document.getElementById('evidenceModal');
+      modal.classList.remove('active');
+      if (lastActiveElement) lastActiveElement.focus();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeEvidenceModal();
+    });
+
+    // Stale Sensitivity Simulation
     async function simulateCostChange() {
       if (!currentResearch) return;
       const newIng = parseFloat(document.getElementById('simIngredientCost').value) || 0;
@@ -1790,102 +2623,7 @@
       document.getElementById('btnAcceptExperiment').disabled = false;
     }
 
-    function printSOPCard() {
-      if (!currentResearch || !currentResearch.report || !currentResearch.report.experiment) {
-        alert("Please run research first to generate an experiment.");
-        return;
-      }
-      const exp = currentResearch.report.experiment;
-      const printWindow = window.open('', '_blank', 'width=800,height=700');
-      const stepsHtml = exp.steps.map(s => `<li>[ ] ${s}</li>`).join('');
-      const stopHtml = (exp.stop_conditions || []).map(sc => `<li>⚠️ ${sc}</li>`).join('');
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Staff SOP Experiment Card - DukaanPulse</title>
-          <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #0F172A; background: #F8FAFC; line-height: 1.5; }
-            .box { border: 2px solid #0F766E; padding: 1.5rem; border-radius: 8px; background: #FFFFFF; }
-            h1 { font-size: 1.4rem; margin-top: 0; color: #0F172A; }
-            .badge { display: inline-block; padding: 4px 8px; background: #0F766E; color: #FFFFFF; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
-            ul, ol { padding-left: 1.25rem; }
-            li { margin-bottom: 0.5rem; }
-            table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #FFFFFF; }
-            th, td { border: 1px solid #CBD5E1; padding: 8px; text-align: left; }
-            th { background: #F1F5F9; color: #0F172A; }
-            @media print { button { display: none; } }
-          </style>
-        </head>
-        <body>
-          <div style="margin-bottom: 1rem;">
-            <button onclick="window.print()" style="padding: 8px 16px; background: #0F766E; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
-          </div>
-          <div class="box">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="badge">DUKAANPULSE STAFF EXPERIMENT CARD</span>
-              <span><strong>Budget Cap:</strong> ₹${exp.budget_ceiling}</span>
-            </div>
-            <h1>${exp.title}</h1>
-            <p><strong>Locality:</strong> ${currentResearch.locality} | <strong>Category:</strong> ${currentResearch.category}</p>
-            <hr style="margin: 1rem 0; border: none; border-top: 1px solid #E2E8F0;"/>
-            <h3>1. Pre-Spending Validation Step:</h3>
-            <p>${exp.validation_step}</p>
-            <h3 style="margin-top: 1rem;">2. Kitchen & Staff Action Checklist:</h3>
-            <ul style="list-style-type: none; padding-left: 0;">${stepsHtml}</ul>
-            <h3 style="margin-top: 1rem;">3. Success Target:</h3>
-            <p>${exp.success_criterion}</p>
-            <h3 style="margin-top: 1rem;">4. Stop / Abort Conditions:</h3>
-            <ul style="list-style-type: none; padding-left: 0; color: #991B1B;">${stopHtml}</ul>
-            <h3 style="margin-top: 1rem;">5. Daily Order Logging Log:</h3>
-            <table>
-              <thead>
-                <tr><th>Day</th><th>Date</th><th>Orders Sold</th><th>Revenue (₹)</th><th>Ingredient Waste / Notes</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Day 1</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>Day 2</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>Day 3</td><td></td><td></td><td></td><td></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-    }
-
-    function openEvidenceModal(evidenceId) {
-      const item = evidenceMap.get(evidenceId);
-      if (!item) return;
-
-      document.getElementById('modalEvidenceBadge').textContent = item.evidence_id;
-      document.getElementById('modalEvidenceTitle').textContent = item.title || 'Source Evidence';
-      document.getElementById('modalEvidenceQuery').textContent = item.query;
-      document.getElementById('modalEvidenceRetrieved').textContent = new Date(item.retrieved_at).toLocaleString();
-      document.getElementById('modalEvidenceDate').textContent = item.source_date || 'Not explicitly reported';
-      document.getElementById('modalEvidenceSnippet').textContent = item.snippet;
-
-      const linkEl = document.getElementById('modalEvidenceLink');
-      if (item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'))) {
-        linkEl.href = item.url;
-        linkEl.style.display = 'inline-flex';
-      } else {
-        linkEl.style.display = 'none';
-      }
-
-      document.getElementById('evidenceModal').classList.add('active');
-    }
-
-    function closeEvidenceModal() {
-      document.getElementById('evidenceModal').classList.remove('active');
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeEvidenceModal();
-    });
-
+    // Experiment Acceptance & Seeding
     async function acceptExperiment() {
       if (!currentResearch) return;
       clearError();
@@ -1906,8 +2644,10 @@
 
         currentExperiment = expData;
         renderTracker(expData);
+        loadExperimentTasks(expData.id);
 
         document.getElementById('tabTracker').disabled = false;
+        showToast('Experiment approved & operational tasks seeded in SQLite', 'success');
         showScreen('screenTracker');
 
       } catch (err) {
@@ -1917,11 +2657,11 @@
       }
     }
 
+    // Render Experiment Tracker
     function renderTracker(exp) {
       document.getElementById('trackerExpTitle').textContent = exp.title;
       document.getElementById('trackerExpMeta').textContent = `Experiment ID: ${exp.id} | Budget Ceiling: ₹${exp.budget_ceiling} | Created: ${new Date(exp.created_at).toLocaleDateString()}`;
 
-      // Show approved assumptions snapshot
       const snap = exp.assumptions_snapshot;
       if (snap && snap.selling_price) {
         document.getElementById('trackerAssumptions').textContent =
@@ -1970,6 +2710,140 @@
       }
     }
 
+    // Feature 8: Operational Task Checklist
+    async function loadExperimentTasks(expId) {
+      try {
+        const res = await fetch(`/api/experiments/${expId}/tasks`);
+        if (!res.ok) return;
+        const tasks = await res.json();
+        renderTaskList(tasks);
+      } catch (e) {
+        console.error('Error fetching tasks', e);
+      }
+    }
+
+    function renderTaskList(tasks) {
+      const container = document.getElementById('taskListContainer');
+      container.innerHTML = '';
+
+      if (!tasks || tasks.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.5rem 0;">No operational tasks registered.</div>';
+        document.getElementById('taskProgressText').textContent = '0 of 0 tasks completed (0%)';
+        document.getElementById('taskProgressBar').style.width = '0%';
+        return;
+      }
+
+      let completedCount = 0;
+      tasks.forEach(t => {
+        if (t.is_completed) completedCount++;
+
+        const div = document.createElement('div');
+        div.className = `task-item ${t.is_completed ? 'completed' : ''}`;
+
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.alignItems = 'center';
+        left.style.gap = '0.65rem';
+
+        const chk = document.createElement('input');
+        chk.type = 'checkbox';
+        chk.className = 'task-checkbox';
+        chk.checked = !!t.is_completed;
+        chk.onchange = () => toggleTask(t.id, chk.checked);
+
+        const txt = document.createElement('span');
+        txt.className = 'task-text';
+        txt.style.fontSize = '0.88rem';
+        txt.textContent = t.text;
+
+        const badge = document.createElement('span');
+        badge.className = t.is_owner_added ? 'badge badge-info' : 'badge badge-ready';
+        badge.style.fontSize = '0.65rem';
+        badge.style.padding = '0.1rem 0.4rem';
+        badge.textContent = t.is_owner_added ? 'Owner Task' : 'AI Proposed';
+
+        left.appendChild(chk);
+        left.appendChild(txt);
+        left.appendChild(badge);
+
+        div.appendChild(left);
+
+        if (t.is_owner_added) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn btn-danger';
+          delBtn.style.padding = '0.2rem 0.5rem';
+          delBtn.style.fontSize = '0.75rem';
+          delBtn.innerHTML = '&times;';
+          delBtn.title = 'Delete task';
+          delBtn.onclick = () => deleteTask(t.id);
+          div.appendChild(delBtn);
+        }
+
+        container.appendChild(div);
+      });
+
+      const pct = Math.round((completedCount / tasks.length) * 100);
+      document.getElementById('taskProgressText').textContent = `${completedCount} of ${tasks.length} tasks completed (${pct}%)`;
+      document.getElementById('taskProgressBar').style.width = `${pct}%`;
+    }
+
+    async function toggleTask(taskId, completed) {
+      if (!currentExperiment) return;
+      try {
+        const res = await fetch(`/api/experiments/${currentExperiment.id}/tasks/${taskId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_completed: completed })
+        });
+        if (res.ok) {
+          loadExperimentTasks(currentExperiment.id);
+        }
+      } catch (e) {
+        showError('Failed to update task state');
+      }
+    }
+
+    async function handleAddTask(e) {
+      e.preventDefault();
+      if (!currentExperiment) return;
+      const input = document.getElementById('newTaskTitle');
+      const title = input.value.trim();
+      if (!title) return;
+
+      try {
+        const res = await fetch(`/api/experiments/${currentExperiment.id}/tasks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: title })
+        });
+        if (res.ok) {
+          input.value = '';
+          showToast('Added custom owner task', 'success');
+          loadExperimentTasks(currentExperiment.id);
+        } else {
+          showError('Failed to add task');
+        }
+      } catch (e) {
+        showError('Failed to add task');
+      }
+    }
+
+    async function deleteTask(taskId) {
+      if (!currentExperiment) return;
+      try {
+        const res = await fetch(`/api/experiments/${currentExperiment.id}/tasks/${taskId}`, {
+          method: 'DELETE'
+        });
+        if (res.ok) {
+          showToast('Task removed', 'success');
+          loadExperimentTasks(currentExperiment.id);
+        }
+      } catch (e) {
+        showError('Failed to delete task');
+      }
+    }
+
+    // Daily Measurement Submission
     async function handleOutcomeSubmit(e) {
       e.preventDefault();
       if (!currentExperiment) return;
@@ -2002,6 +2876,7 @@
 
         currentExperiment = updated;
         renderTracker(updated);
+        showToast('Daily measurement saved to SQLite ledger', 'success');
 
         document.getElementById('outOrders').value = '';
         document.getElementById('outRevenue').value = '';
@@ -2013,6 +2888,300 @@
       } finally {
         btn.disabled = false;
       }
+    }
+
+    // Feature 5: Offer Comparison
+    function loadComparisonPreset() {
+      document.getElementById('cmpNameA').value = 'Weekday Breakfast Bundle';
+      document.getElementById('cmpPriceA').value = '179';
+      document.getElementById('cmpIngA').value = '50';
+      document.getElementById('cmpPkgA').value = '10';
+      document.getElementById('cmpOtherA').value = '5';
+      document.getElementById('cmpSetupA').value = '450';
+      document.getElementById('cmpQtyA').value = '20';
+      document.getElementById('cmpNotesA').value = 'Standard kitchen equipment, 15 min prep';
+
+      document.getElementById('cmpNameB').value = 'Artisanal Croissant Box';
+      document.getElementById('cmpPriceB').value = '220';
+      document.getElementById('cmpIngB').value = '85';
+      document.getElementById('cmpPkgB').value = '18';
+      document.getElementById('cmpOtherB').value = '5';
+      document.getElementById('cmpSetupB').value = '300';
+      document.getElementById('cmpQtyB').value = '15';
+      document.getElementById('cmpNotesB').value = 'Morning baking shift from 6 AM, oven sharing';
+
+      document.getElementById('cmpBudget').value = '2000';
+      runOfferComparison();
+      showToast('Loaded comparative preset', 'success');
+    }
+
+    async function runOfferComparison() {
+      const budget = parseFloat(document.getElementById('cmpBudget').value) || 2000;
+      const offer_a = {
+        name: document.getElementById('cmpNameA').value.trim() || 'Offer A',
+        selling_price: parseFloat(document.getElementById('cmpPriceA').value) || 0,
+        ingredient_cost: parseFloat(document.getElementById('cmpIngA').value) || 0,
+        packaging_cost: parseFloat(document.getElementById('cmpPkgA').value) || 0,
+        other_variable_cost: parseFloat(document.getElementById('cmpOtherA').value) || 0,
+        one_time_pilot_cost: parseFloat(document.getElementById('cmpSetupA').value) || 0,
+        planned_quantity: parseInt(document.getElementById('cmpQtyA').value, 10) || 1,
+        operational_notes: document.getElementById('cmpNotesA').value.trim()
+      };
+
+      const offer_b = {
+        name: document.getElementById('cmpNameB').value.trim() || 'Offer B',
+        selling_price: parseFloat(document.getElementById('cmpPriceB').value) || 0,
+        ingredient_cost: parseFloat(document.getElementById('cmpIngB').value) || 0,
+        packaging_cost: parseFloat(document.getElementById('cmpPkgB').value) || 0,
+        other_variable_cost: parseFloat(document.getElementById('cmpOtherB').value) || 0,
+        one_time_pilot_cost: parseFloat(document.getElementById('cmpSetupB').value) || 0,
+        planned_quantity: parseInt(document.getElementById('cmpQtyB').value, 10) || 1,
+        operational_notes: document.getElementById('cmpNotesB').value.trim()
+      };
+
+      if (offer_a.selling_price <= 0 || offer_b.selling_price <= 0) return;
+
+      try {
+        const res = await fetch('/api/economics/compare', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ offer_a, offer_b, max_budget: budget })
+        });
+        if (!res.ok) return;
+        const comp = await res.json();
+
+        // Render comparative table
+        document.getElementById('colHeaderA').textContent = comp.offer_a.name;
+        document.getElementById('colHeaderB').textContent = comp.offer_b.name;
+
+        document.getElementById('resPriceA').textContent = `₹${comp.offer_a.selling_price.toFixed(2)}`;
+        document.getElementById('resPriceB').textContent = `₹${comp.offer_b.selling_price.toFixed(2)}`;
+        const diffPrice = comp.offer_b.selling_price - comp.offer_a.selling_price;
+        document.getElementById('resDiffPrice').textContent = diffPrice >= 0 ? `+₹${diffPrice.toFixed(2)} for B` : `+₹${(-diffPrice).toFixed(2)} for A`;
+
+        document.getElementById('resVarCostA').textContent = `₹${comp.offer_a.variable_cost_per_order.toFixed(2)}`;
+        document.getElementById('resVarCostB').textContent = `₹${comp.offer_b.variable_cost_per_order.toFixed(2)}`;
+        const diffVar = comp.offer_b.variable_cost_per_order - comp.offer_a.variable_cost_per_order;
+        document.getElementById('resDiffVarCost').textContent = diffVar >= 0 ? `₹${diffVar.toFixed(2)} higher for B` : `₹${(-diffVar).toFixed(2)} higher for A`;
+
+        document.getElementById('resContribA').textContent = `₹${comp.offer_a.contribution_per_order.toFixed(2)}`;
+        document.getElementById('resContribB').textContent = `₹${comp.offer_b.contribution_per_order.toFixed(2)}`;
+        const diffContrib = comp.offer_a.contribution_per_order - comp.offer_b.contribution_per_order;
+        document.getElementById('resDiffContrib').textContent = diffContrib >= 0 ? `+₹${diffContrib.toFixed(2)} higher for A` : `+₹${(-diffContrib).toFixed(2)} higher for B`;
+
+        document.getElementById('resMarginA').textContent = `${comp.offer_a.gross_margin_pct}%`;
+        document.getElementById('resMarginB').textContent = `${comp.offer_b.gross_margin_pct}%`;
+        const diffMargin = comp.offer_a.gross_margin_pct - comp.offer_b.gross_margin_pct;
+        document.getElementById('resDiffMargin').textContent = diffMargin >= 0 ? `+${diffMargin.toFixed(1)}% for A` : `+${(-diffMargin).toFixed(1)}% for B`;
+
+        document.getElementById('resPilotCostA').textContent = `₹${comp.offer_a.estimated_pilot_cost.toFixed(2)}`;
+        document.getElementById('resPilotCostB').textContent = `₹${comp.offer_b.estimated_pilot_cost.toFixed(2)}`;
+        const diffPilot = comp.offer_b.estimated_pilot_cost - comp.offer_a.estimated_pilot_cost;
+        document.getElementById('resDiffPilotCost').textContent = diffPilot >= 0 ? `₹${diffPilot.toFixed(2)} lower for A` : `₹${(-diffPilot).toFixed(2)} lower for B`;
+
+        document.getElementById('resBudgetA').innerHTML = comp.offer_a.is_budget_compliant ? '<span class="badge badge-ready">Within Budget</span>' : '<span class="badge badge-danger">Over Budget</span>';
+        document.getElementById('resBudgetB').innerHTML = comp.offer_b.is_budget_compliant ? '<span class="badge badge-ready">Within Budget</span>' : '<span class="badge badge-danger">Over Budget</span>';
+
+        document.getElementById('resBreakEvenA').textContent = comp.offer_a.orders_to_cover_setup !== null ? `${comp.offer_a.orders_to_cover_setup} orders` : 'None (Negative)';
+        document.getElementById('resBreakEvenB').textContent = comp.offer_b.orders_to_cover_setup !== null ? `${comp.offer_b.orders_to_cover_setup} orders` : 'None (Negative)';
+
+        // Guidance Box
+        document.getElementById('compareGuidanceBox').innerHTML = `
+          <strong>Comparative Assessment:</strong> ${comp.comparison_summary}
+          <div style="margin-top: 0.35rem; font-size: 0.8rem; color: #334155;">
+            <strong>Offer A Notes:</strong> ${comp.offer_a.operational_notes || 'None specified'} | 
+            <strong>Offer B Notes:</strong> ${comp.offer_b.operational_notes || 'None specified'}
+          </div>
+        `;
+
+      } catch (e) {
+        console.error('Error running comparison', e);
+      }
+    }
+
+    // Feature 7: Research History & Archive
+    async function loadResearchHistory() {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Fetching saved research runs...</td></tr>';
+
+      try {
+        const res = await fetch('/api/research');
+        if (!res.ok) throw new Error('Failed to fetch history');
+        const runs = await res.json();
+
+        tbody.innerHTML = '';
+        if (!runs || runs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No historical research runs saved yet. Run your first research inquiry in Tab 1!</td></tr>';
+          return;
+        }
+
+        runs.forEach(run => {
+          const tr = document.createElement('tr');
+
+          const tdQ = document.createElement('td');
+          tdQ.style.fontWeight = '600';
+          tdQ.style.maxWidth = '280px';
+          tdQ.textContent = run.question;
+
+          const tdLoc = document.createElement('td');
+          tdLoc.textContent = `${run.category} • ${run.locality}`;
+
+          const tdDate = document.createElement('td');
+          tdDate.style.fontSize = '0.8rem';
+          tdDate.style.color = 'var(--text-muted)';
+          tdDate.textContent = new Date(run.created_at).toLocaleString();
+
+          const tdStatus = document.createElement('td');
+          const badgeClass = run.report_status === 'ready' ? 'badge badge-ready' : (run.report_status === 'needs_owner_input' ? 'badge badge-warning' : 'badge badge-insufficient');
+          tdStatus.innerHTML = `<span class="${badgeClass}">${run.report_status}</span>`;
+
+          const tdExp = document.createElement('td');
+          tdExp.innerHTML = run.has_accepted_experiment ? '<span class="badge badge-ready">Accepted</span>' : '<span class="badge badge-info">Not Started</span>';
+
+          const tdActions = document.createElement('td');
+          tdActions.style.whiteSpace = 'nowrap';
+          tdActions.innerHTML = `
+            <button class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.78rem; margin-right: 0.35rem;" onclick="openHistoryReport('${run.id}')">Open Report</button>
+            <button class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.78rem; margin-right: 0.35rem;" onclick="prefillSetupFromHistory('${run.id}')">Reuse Inputs</button>
+            <a href="/api/research/${run.id}/export-csv" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.78rem;">CSV</a>
+          `;
+
+          tr.appendChild(tdQ);
+          tr.appendChild(tdLoc);
+          tr.appendChild(tdDate);
+          tr.appendChild(tdStatus);
+          tr.appendChild(tdExp);
+          tr.appendChild(tdActions);
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--danger-text); padding: 1.5rem;">Error loading history: ${err.message}</td></tr>`;
+      }
+    }
+    }
+
+    async function openHistoryReport(researchId) {
+      try {
+        const res = await fetch(`/api/research/${researchId}`);
+        if (!res.ok) throw new Error('Could not load report');
+        const data = await res.json();
+        currentResearch = data;
+        renderReport(data);
+        document.getElementById('tabReport').disabled = false;
+        showToast('Loaded historical report from SQLite (0 API credits used)', 'success');
+        showScreen('screenReport');
+      } catch (e) {
+        showError(e.message);
+      }
+    }
+
+    async function prefillSetupFromHistory(researchId) {
+      try {
+        const res = await fetch(`/api/research/${researchId}`);
+        if (!res.ok) throw new Error('Could not load report');
+        const data = await res.json();
+        
+        document.getElementById('inputCategory').value = data.category;
+        document.getElementById('inputLocality').value = data.locality;
+        document.getElementById('inputQuestion').value = data.question;
+        document.getElementById('inputBudget').value = data.budget_ceiling;
+        document.getElementById('inputConstraints').value = data.constraints || '';
+
+        const snap = data.assumptions_snapshot || {};
+        if (snap.selling_price) document.getElementById('econPrice').value = snap.selling_price;
+        if (snap.ingredient_cost) document.getElementById('econIng').value = snap.ingredient_cost;
+        if (snap.packaging_cost !== undefined) document.getElementById('econPkg').value = snap.packaging_cost;
+        if (snap.other_variable_cost !== undefined) document.getElementById('econOther').value = snap.other_variable_cost;
+        if (snap.one_time_pilot_cost !== undefined) document.getElementById('econSetup').value = snap.one_time_pilot_cost;
+        if (snap.planned_quantity) document.getElementById('econQty').value = snap.planned_quantity;
+
+        liveUpdateEconomics();
+        showToast('Pre-filled setup form with historical parameters', 'success');
+        showScreen('screenSetup');
+      } catch (e) {
+        showError(e.message);
+      }
+    }
+
+    // CSV Exports
+    function exportResearchCSV() {
+      if (!currentResearch) return;
+      window.location.href = `/api/research/${currentResearch.research_id}/export-csv`;
+      showToast('Downloading research evidence CSV', 'success');
+    }
+
+    function exportExperimentCSV() {
+      if (!currentExperiment) return;
+      window.location.href = `/api/experiments/${currentExperiment.id}/export-csv`;
+      showToast('Downloading experiment outcome CSV', 'success');
+    }
+
+    // Print Staff SOP Card Helper
+    function printSOPCard() {
+      if (!currentResearch || !currentResearch.report || !currentResearch.report.experiment) {
+        alert("Please run research first to generate an experiment.");
+        return;
+      }
+      const exp = currentResearch.report.experiment;
+      const printWindow = window.open('', '_blank', 'width=800,height=700');
+      const stepsHtml = exp.steps.map(s => `<li>[ ] ${s}</li>`).join('');
+      const stopHtml = (exp.stop_conditions || []).map(sc => `<li>⚠️ ${sc}</li>`).join('');
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Staff SOP Experiment Card - DukaanPulse</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #0F172A; background: #F8FAFC; line-height: 1.5; }
+            .box { border: 2px solid #0F766E; padding: 1.5rem; border-radius: 8px; background: #FFFFFF; }
+            h1 { font-size: 1.4rem; margin-top: 0; color: #0F172A; }
+            .badge { display: inline-block; padding: 4px 8px; background: #0F766E; color: #FFFFFF; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+            ul, ol { padding-left: 1.25rem; }
+            li { margin-bottom: 0.5rem; }
+            table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #FFFFFF; }
+            th, td { border: 1px solid #CBD5E1; padding: 8px; text-align: left; }
+            th { background: #F1F5F9; color: #0F172A; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div style="margin-bottom: 1rem;">
+            <button onclick="window.print()" style="padding: 8px 16px; background: #0F766E; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
+          </div>
+          <div class="box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge">DUKAANPULSE STAFF EXPERIMENT CARD</span>
+              <span><strong>Budget Cap:</strong> ₹${exp.budget_ceiling}</span>
+            </div>
+            <h1>${exp.title}</h1>
+            <p><strong>Locality:</strong> ${currentResearch.locality} | <strong>Category:</strong> ${currentResearch.category}</p>
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid #E2E8F0;"/>
+            <h3>1. Pre-Spending Validation Step:</h3>
+            <p>${exp.validation_step}</p>
+            <h3 style="margin-top: 1rem;">2. Kitchen & Staff Action Checklist:</h3>
+            <ul style="list-style-type: none; padding-left: 0;">${stepsHtml}</ul>
+            <h3 style="margin-top: 1rem;">3. Success Target:</h3>
+            <p>${exp.success_criterion}</p>
+            <h3 style="margin-top: 1rem;">4. Stop / Abort Conditions:</h3>
+            <ul style="list-style-type: none; padding-left: 0; color: #991B1B;">${stopHtml}</ul>
+            <h3 style="margin-top: 1rem;">5. Daily Order Logging Table:</h3>
+            <table>
+              <thead>
+                <tr><th>Day</th><th>Date</th><th>Orders Sold</th><th>Revenue (₹)</th><th>Ingredient Waste / Notes</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Day 1</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>Day 2</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>Day 3</td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
     }
   </script>
 </body>

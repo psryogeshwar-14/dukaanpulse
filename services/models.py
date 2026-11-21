@@ -189,3 +189,74 @@ class HealthResponse(BaseModel):
     llm_configured: bool
     llm_provider: str
     database_ok: bool
+
+
+class ResearchRunSummary(BaseModel):
+    id: str
+    category: str
+    locality: str
+    question: str
+    budget: float
+    created_at: str
+    report_status: str
+    has_accepted_experiment: bool
+    experiment_id: Optional[str] = None
+
+
+class ExperimentTask(BaseModel):
+    id: str
+    experiment_id: str
+    text: str
+    is_completed: bool = False
+    is_owner_added: bool = False
+    created_at: str
+
+
+class ExperimentTaskCreate(BaseModel):
+    text: str = Field(..., min_length=2, max_length=250)
+
+
+class ExperimentTaskUpdate(BaseModel):
+    is_completed: Optional[bool] = None
+    text: Optional[str] = Field(None, min_length=2, max_length=250)
+
+
+class OfferProfile(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    selling_price: float = Field(..., gt=0)
+    ingredient_cost: float = Field(..., ge=0)
+    packaging_cost: float = Field(0.0, ge=0)
+    other_variable_cost: float = Field(0.0, ge=0)
+    one_time_pilot_cost: float = Field(0.0, ge=0)
+    planned_quantity: int = Field(..., ge=1, le=10000)
+    operational_notes: Optional[str] = Field("", max_length=500)
+
+
+class OfferComparisonRequest(BaseModel):
+    offer_a: OfferProfile
+    offer_b: OfferProfile
+    max_budget: float = Field(..., gt=0, le=1000000)
+
+
+class OfferComparisonItemResult(BaseModel):
+    name: str
+    selling_price: float
+    variable_cost_per_order: float
+    contribution_per_order: float
+    gross_margin_pct: Optional[float]
+    estimated_pilot_cost: float
+    orders_to_cover_setup: Optional[int]
+    is_budget_compliant: bool
+    budget_variance: float
+    operational_notes: str
+
+
+class OfferComparisonResponse(BaseModel):
+    id: str
+    max_budget: float
+    offer_a: OfferComparisonItemResult
+    offer_b: OfferComparisonItemResult
+    higher_contribution_offer: Optional[str]
+    comparison_summary: str
+    disclaimer: str
+    created_at: str

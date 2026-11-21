@@ -9,7 +9,8 @@ from datetime import datetime
 from typing import Optional, List, Dict, Any
 from services.models import (
     ResearchRequest, ResearchReport, EvidenceItem, ResearchResponse,
-    ExperimentRecord, OutcomeInput, OutcomeRecord
+    ExperimentRecord, OutcomeInput, OutcomeRecord,
+    ResearchRunSummary, ExperimentTask, OfferComparisonResponse, OfferComparisonRequest
 )
 
 
@@ -106,6 +107,29 @@ class Storage:
                 notes TEXT,
                 created_at TEXT NOT NULL,
                 FOREIGN KEY (experiment_id) REFERENCES experiments(id) ON DELETE CASCADE
+            );
+            """)
+
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS experiment_tasks (
+                id TEXT PRIMARY KEY,
+                experiment_id TEXT NOT NULL,
+                text TEXT NOT NULL,
+                is_completed INTEGER NOT NULL DEFAULT 0,
+                is_owner_added INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (experiment_id) REFERENCES experiments(id) ON DELETE CASCADE
+            );
+            """)
+
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS offer_comparisons (
+                id TEXT PRIMARY KEY,
+                max_budget REAL NOT NULL,
+                offer_a_json TEXT NOT NULL,
+                offer_b_json TEXT NOT NULL,
+                result_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
             );
             """)
             conn.commit()
@@ -207,6 +231,40 @@ class Storage:
                 evidence=evidence,
             )
 
+    def list_research_runs(self, limit: int = 50) -> List[ResearchRunSummary]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT r.id, r.category, r.locality, r.question, r.budget, r.report_json, r.created_at,
+                       e.id as experiment_id
+                FROM research_runs r
+                LEFT JOIN experiments e ON e.research_id = r.id
+                ORDER BY r.created_at DESC
+                LIMIT ?
+            """, (limit,))
+            rows = cursor.fetchall()
+
+            summaries = []
+            for r in rows:
+                status = "unknown"
+                try:
+                    rep = json.loads(r["report_json"])
+                    status = rep.get("status", "unknown")
+                except Exception:
+                    pass
+                summaries.append(ResearchRunSummary(
+                    id=r["id"],
+                    category=r["category"],
+                    locality=r["locality"],
+                    question=r["question"],
+                    budget=r["budget"],
+                    created_at=r["created_at"],
+                    report_status=status,
+                    has_accepted_experiment=bool(r["experiment_id"]),
+                    experiment_id=r["experiment_id"]
+                ))
+            return summaries
+
     def create_experiment(self, research_id: str) -> Optional[ExperimentRecord]:
         research = self.get_research(research_id)
         if not research:
@@ -246,6 +304,18 @@ class Storage:
                     now,
                 ),
             )
+
+            # Seed actionable tasks from experiment steps
+            for step_text in exp.steps:
+                task_id = f"tsk_{uuid.uuid4().hex[:12]}"
+                cursor.execute(
+                    """
+                    INSERT INTO experiment_tasks (id, experiment_id, text, is_completed, is_owner_added, created_at)
+                    VALUES (?, ?, ?, 0, 0, ?)
+                    """,
+                    (task_id, exp_id, step_text, now)
+                )
+
             conn.commit()
 
         return self.get_experiment(exp_id)
@@ -381,3 +451,128 @@ class Storage:
             notes=outcome.notes or "",
             created_at=now,
         )
+
+    # -------------------------------------------------------------------------
+    # Experiment Task Checklist Methods
+    # -------------------------------------------------------------------------
+    def get_experiment_tasks(self, experiment_id: str) -> List[ExperimentTask]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, experiment_id, text, is_completed, is_owner_added, created_at
+                FROM experiment_tasks
+                WHERE experiment_id = ?
+                ORDER BY is_owner_added ASC, created_at ASC
+                """,
+                (experiment_id,)
+            )
+            rows = cursor.fetchall()
+            return [
+                ExperimentTask(
+                    id=r["id"],
+                    experiment_id=r["experiment_id"],
+                    text=r["text"],
+                    is_completed=bool(r["is_completed"]),
+                    is_owner_added=bool(r["is_owner_added"]),
+                    created_at=r["created_at"]
+                )
+                for r in rows
+            ]
+
+    def add_experiment_task(self, experiment_id: str, text: str, is_owner_added: bool = True) -> Optional[ExperimentTask]:
+        exp = self.get_experiment(experiment_id)
+        if not exp:
+            return None
+        task_id = f"tsk_{uuid.uuid4().hex[:12]}"
+        now = datetime.utcnow().isoformat() + "Z"
+        clean_text = text.strip()
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                INSERT INTO experiment_tasks (id, experiment_id, text, is_completed, is_owner_added, created_at)
+                VALUES (?, ?, ?, 0, ?, ?)
+                """,
+                (task_id, experiment_id, clean_text, 1 if is_owner_added else 0, now)
+            )
+            conn.commit()
+        return ExperimentTask(
+            id=task_id,
+            experiment_id=experiment_id,
+            text=clean_text,
+            is_completed=False,
+            is_owner_added=is_owner_added,
+            created_at=now
+        )
+
+    def update_experiment_task(
+        self, task_id: str, is_completed: Optional[bool] = None, text: Optional[str] = None
+    ) -> Optional[ExperimentTask]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM experiment_tasks WHERE id = ?", (task_id,))
+            row = cursor.fetchone()
+            if not row:
+                return None
+            new_completed = int(is_completed) if is_completed is not None else row["is_completed"]
+            new_text = text.strip() if text is not None and text.strip() else row["text"]
+            cursor.execute(
+                """
+                UPDATE experiment_tasks SET is_completed = ?, text = ? WHERE id = ?
+                """,
+                (new_completed, new_text, task_id)
+            )
+            conn.commit()
+            return ExperimentTask(
+                id=row["id"],
+                experiment_id=row["experiment_id"],
+                text=new_text,
+                is_completed=bool(new_completed),
+                is_owner_added=bool(row["is_owner_added"]),
+                created_at=row["created_at"]
+            )
+
+    def delete_experiment_task(self, task_id: str) -> bool:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM experiment_tasks WHERE id = ?", (task_id,))
+            conn.commit()
+            return cursor.rowcount > 0
+
+    # -------------------------------------------------------------------------
+    # Offer Comparison Persistence Methods
+    # -------------------------------------------------------------------------
+    def save_offer_comparison(self, comp: OfferComparisonResponse) -> str:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                INSERT INTO offer_comparisons (id, max_budget, offer_a_json, offer_b_json, result_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    comp.id,
+                    comp.max_budget,
+                    comp.offer_a.model_dump_json(),
+                    comp.offer_b.model_dump_json(),
+                    comp.model_dump_json(),
+                    comp.created_at
+                )
+            )
+            conn.commit()
+            return comp.id
+
+    def list_offer_comparisons(self, limit: int = 20) -> List[OfferComparisonResponse]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT result_json FROM offer_comparisons ORDER BY created_at DESC LIMIT ?", (limit,))
+            rows = cursor.fetchall()
+            results = []
+            for r in rows:
+                try:
+                    data = json.loads(r["result_json"])
+                    results.append(OfferComparisonResponse.model_validate(data))
+                except Exception:
+                    pass
+            return results

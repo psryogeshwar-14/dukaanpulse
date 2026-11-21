@@ -203,3 +203,198 @@ def test_stale_economics_check_endpoint(client):
     assert check2.status_code == 200
     assert check2.json()["is_stale"] is True
     assert "ingredient cost changed" in check2.json()["stale_reason"].lower()
+
+
+def test_research_history_and_csv_export(client):
+    # 1. Create a research run
+    res = client.post("/api/research", json={
+        "category": "Cafe",
+        "locality": "HSR Layout, Bengaluru",
+        "question": "Which weekday breakfast combo to test?",
+        "budget": 2000.0,
+        "economics": {
+            "selling_price": 179.0,
+            "ingredient_cost": 50.0,
+            "packaging_cost": 10.0,
+            "other_variable_cost": 5.0,
+            "one_time_pilot_cost": 450.0,
+            "max_pilot_budget": 2000.0
+        }
+    })
+    assert res.status_code == 200
+    research_id = res.json()["research_id"]
+
+    # 2. List history
+    hist_res = client.get("/api/research")
+    assert hist_res.status_code == 200
+    hist = hist_res.json()
+    assert len(hist) >= 1
+    run_entry = next((r for r in hist if r["id"] == research_id), None)
+    assert run_entry is not None
+    assert run_entry["category"] == "Cafe"
+    assert run_entry["has_accepted_experiment"] is False
+
+    # 3. Export research CSV
+    csv_res = client.get(f"/api/research/{research_id}/export-csv")
+    assert csv_res.status_code == 200
+    assert "text/csv" in csv_res.headers["content-type"]
+    csv_text = csv_res.text
+    assert "RESEARCH SUMMARY" in csv_text
+    assert research_id in csv_text
+    assert "VERIFIED EVIDENCE LEDGER" in csv_text
+    assert "OWNER-ENTERED UNIT ECONOMICS" in csv_text
+
+
+def test_experiment_tasks_lifecycle_and_csv_export(client):
+    # 1. Create research and accept experiment
+    res = client.post("/api/research", json={
+        "category": "Cafe",
+        "locality": "HSR Layout, Bengaluru",
+        "question": "Which weekday breakfast combo to test?",
+        "budget": 2000.0
+    })
+    research_id = res.json()["research_id"]
+    exp_res = client.post("/api/experiments", json={"research_id": research_id})
+    assert exp_res.status_code == 200
+    exp_id = exp_res.json()["id"]
+
+    # 2. Get initial tasks (seeded from experiment steps)
+    tasks_res = client.get(f"/api/experiments/{exp_id}/tasks")
+    assert tasks_res.status_code == 200
+    initial_tasks = tasks_res.json()
+    assert len(initial_tasks) >= 1
+    assert all(t["is_owner_added"] is False for t in initial_tasks)
+    first_task = initial_tasks[0]
+
+    # 3. Add an owner task
+    add_res = client.post(f"/api/experiments/{exp_id}/tasks", json={
+        "text": "Taste test batch with barista team"
+    })
+    assert add_res.status_code == 200
+    owner_task = add_res.json()
+    assert owner_task["is_owner_added"] is True
+    assert owner_task["is_completed"] is False
+    assert owner_task["text"] == "Taste test batch with barista team"
+
+    # 4. Toggle task completed
+    patch_res = client.patch(
+        f"/api/experiments/{exp_id}/tasks/{first_task['id']}",
+        json={"is_completed": True}
+    )
+    assert patch_res.status_code == 200
+    assert patch_res.json()["is_completed"] is True
+
+    # 5. Export experiment CSV
+    csv_res = client.get(f"/api/experiments/{exp_id}/export-csv")
+    assert csv_res.status_code == 200
+    assert "text/csv" in csv_res.headers["content-type"]
+    assert "ACTIONABLE TASK CHECKLIST" in csv_res.text
+    assert "Taste test batch with barista team" in csv_res.text
+
+    # 6. Delete owner task
+    del_res = client.delete(f"/api/experiments/{exp_id}/tasks/{owner_task['id']}")
+    assert del_res.status_code == 200
+
+    tasks_after_del = client.get(f"/api/experiments/{exp_id}/tasks").json()
+    assert not any(t["id"] == owner_task["id"] for t in tasks_after_del)
+
+
+def test_offer_comparison_endpoint(client):
+    payload = {
+        "max_budget": 2500.0,
+        "offer_a": {
+            "name": "Standard Cold Brew Combo",
+            "selling_price": 179.0,
+            "ingredient_cost": 50.0,
+            "packaging_cost": 10.0,
+            "other_variable_cost": 5.0,
+            "one_time_pilot_cost": 450.0,
+            "planned_quantity": 20,
+            "operational_notes": "Existing cold brew kegs"
+        },
+        "offer_b": {
+            "name": "Premium Artisanal Croissant Box",
+            "selling_price": 249.0,
+            "ingredient_cost": 90.0,
+            "packaging_cost": 15.0,
+            "other_variable_cost": 5.0,
+            "one_time_pilot_cost": 600.0,
+            "planned_quantity": 15,
+            "operational_notes": "Morning bakery delivery needed"
+        }
+    }
+    res = client.post("/api/economics/compare", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["offer_a"]["contribution_per_order"] == 114.0
+    assert data["offer_b"]["contribution_per_order"] == 139.0
+    assert data["higher_contribution_offer"] == "Premium Artisanal Croissant Box"
+    assert "under entered unit cost assumptions" in data["comparison_summary"]
+    assert "Customer demand" in data["disclaimer"]
+
+    # Check list comparisons
+    list_res = client.get("/api/economics/comparisons")
+    assert list_res.status_code == 200
+    assert len(list_res.json()) >= 1
+
+
+def test_csv_injection_formula_defense():
+    from services.export import escape_csv_cell
+    # Test formula triggers: =, +, -, @, tab, return
+    assert escape_csv_cell("=cmd|' /C calc'!A0") == "'=cmd|' /C calc'!A0"
+    assert escape_csv_cell("+12345") == "'+12345"
+    assert escape_csv_cell("-12345") == "'-12345"
+    assert escape_csv_cell("@SUM(A1:A10)") == "'@SUM(A1:A10)"
+    assert escape_csv_cell("Normal Text") == "Normal Text"
+    assert escape_csv_cell('Text with "quotes"') == '"Text with ""quotes"""'
+
+
+def test_compare_offers_equal_contribution_and_budget_variance(client):
+    payload = {
+        "max_budget": 1000.0,
+        "offer_a": {
+            "name": "Combo A",
+            "selling_price": 100.0,
+            "ingredient_cost": 40.0,
+            "packaging_cost": 10.0,
+            "other_variable_cost": 0.0,
+            "one_time_pilot_cost": 100.0,
+            "planned_quantity": 10,
+            "operational_notes": "None"
+        },
+        "offer_b": {
+            "name": "Combo B",
+            "selling_price": 120.0,
+            "ingredient_cost": 60.0,
+            "packaging_cost": 10.0,
+            "other_variable_cost": 0.0,
+            "one_time_pilot_cost": 200.0,
+            "planned_quantity": 25,  # 200 + 25 * 70 = 1950 > 1000 (Over budget)
+            "operational_notes": "None"
+        }
+    }
+    res = client.post("/api/economics/compare", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["offer_a"]["contribution_per_order"] == 50.0
+    assert data["offer_b"]["contribution_per_order"] == 50.0
+    assert data["higher_contribution_offer"] is None
+    assert "Both offers generate identical unit contribution" in data["comparison_summary"]
+    assert data["offer_a"]["is_budget_compliant"] is True
+    assert data["offer_b"]["is_budget_compliant"] is False
+
+
+def test_experiment_task_not_found_handling(client):
+    res = client.patch(
+        "/api/experiments/exp_nonexistent/tasks/task_nonexistent",
+        json={"is_completed": True}
+    )
+    assert res.status_code == 404
+
+    del_res = client.delete("/api/experiments/exp_nonexistent/tasks/task_nonexistent")
+    assert del_res.status_code == 404
+
+
+def test_export_csv_missing_research(client):
+    res = client.get("/api/research/res_nonexistent/export-csv")
+    assert res.status_code == 404

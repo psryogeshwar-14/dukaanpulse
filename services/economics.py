@@ -4,9 +4,13 @@ Computes variable costs, contribution per order, break-even orders,
 budget compliance, and detects stale recommendation assumptions.
 """
 import math
+import uuid
 from datetime import datetime
 from typing import Optional, Dict, Any, Tuple
-from services.models import MerchantEconomicsInput, EconomicsResult
+from services.models import (
+    MerchantEconomicsInput, EconomicsResult,
+    OfferProfile, OfferComparisonRequest, OfferComparisonItemResult, OfferComparisonResponse
+)
 
 
 class EconomicsValidationError(Exception):
@@ -168,3 +172,83 @@ def check_stale_advice(
     if changes:
         return True, "Cost assumptions altered (" + ", ".join(changes) + "). Previously approved advice is STALE."
     return False, None
+
+
+def evaluate_offer_item(offer: OfferProfile, max_budget: float) -> OfferComparisonItemResult:
+    """Calculates deterministic economics for an individual offer profile."""
+    if offer.selling_price <= 0:
+        raise EconomicsValidationError(f"Offer '{offer.name}': selling price must be greater than zero.")
+    if offer.ingredient_cost < 0 or offer.packaging_cost < 0 or offer.other_variable_cost < 0:
+        raise EconomicsValidationError(f"Offer '{offer.name}': variable costs cannot be negative.")
+    if offer.one_time_pilot_cost < 0:
+        raise EconomicsValidationError(f"Offer '{offer.name}': one-time pilot cost cannot be negative.")
+    if offer.planned_quantity < 1:
+        raise EconomicsValidationError(f"Offer '{offer.name}': planned quantity must be at least 1.")
+
+    var_cost = round(offer.ingredient_cost + offer.packaging_cost + offer.other_variable_cost, 2)
+    contrib = round(offer.selling_price - var_cost, 2)
+    margin = round((contrib / offer.selling_price) * 100, 2) if offer.selling_price > 0 else 0.0
+    est_spend = round(offer.one_time_pilot_cost + (offer.planned_quantity * var_cost), 2)
+    is_compliant = est_spend <= max_budget
+    budget_variance = round(max_budget - est_spend, 2)
+
+    orders_to_cover: Optional[int] = None
+    if contrib > 0:
+        orders_to_cover = math.ceil(offer.one_time_pilot_cost / contrib) if offer.one_time_pilot_cost > 0 else 0
+
+    return OfferComparisonItemResult(
+        name=offer.name,
+        selling_price=round(offer.selling_price, 2),
+        variable_cost_per_order=var_cost,
+        contribution_per_order=contrib,
+        gross_margin_pct=margin,
+        estimated_pilot_cost=est_spend,
+        orders_to_cover_setup=orders_to_cover,
+        is_budget_compliant=is_compliant,
+        budget_variance=budget_variance,
+        operational_notes=offer.operational_notes.strip() if offer.operational_notes else "None entered"
+    )
+
+
+def compare_offers(req: OfferComparisonRequest) -> OfferComparisonResponse:
+    """
+    Compares two owner-defined offers under entered cost assumptions.
+    Strictly avoids calling an offer 'best' solely due to contribution.
+    """
+    if req.max_budget <= 0:
+        raise EconomicsValidationError("Maximum pilot budget must be greater than zero.")
+
+    res_a = evaluate_offer_item(req.offer_a, req.max_budget)
+    res_b = evaluate_offer_item(req.offer_b, req.max_budget)
+
+    higher = None
+    if res_a.contribution_per_order > res_b.contribution_per_order:
+        higher = req.offer_a.name
+        summary = (
+            f"'{req.offer_a.name}' yields a higher contribution per order (₹{res_a.contribution_per_order:.2f} vs ₹{res_b.contribution_per_order:.2f}) "
+            f"under entered unit cost assumptions."
+        )
+    elif res_b.contribution_per_order > res_a.contribution_per_order:
+        higher = req.offer_b.name
+        summary = (
+            f"'{req.offer_b.name}' yields a higher contribution per order (₹{res_b.contribution_per_order:.2f} vs ₹{res_a.contribution_per_order:.2f}) "
+            f"under entered unit cost assumptions."
+        )
+    else:
+        summary = (
+            f"Both offers generate identical unit contribution of ₹{res_a.contribution_per_order:.2f} per order under entered assumptions."
+        )
+
+    return OfferComparisonResponse(
+        id=f"cmp_{uuid.uuid4().hex[:12]}",
+        max_budget=req.max_budget,
+        offer_a=res_a,
+        offer_b=res_b,
+        higher_contribution_offer=higher,
+        comparison_summary=summary,
+        disclaimer=(
+            "Calculated strictly under owner-entered managerial cost assumptions. "
+            "Customer demand, operational capacity, and market feasibility are not established by this comparative model."
+        ),
+        created_at=datetime.utcnow().isoformat() + "Z"
+    )
