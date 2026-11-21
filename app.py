@@ -87,10 +87,8 @@ def get_synthesis_adapter() -> SynthesisAdapter:
     return SynthesisAdapter(provider=provider, api_key=api_key, model=model, mock_mode=mock_mode)
 
 
-api_router = APIRouter()
-
-
-@api_router.get("/health", response_model=HealthResponse)
+@app.get("/api/health", response_model=HealthResponse)
+@app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint revealing provider configuration status without leaking secrets."""
     you_key = os.getenv("YOU_API_KEY", "")
@@ -112,7 +110,8 @@ async def health_check():
     )
 
 
-@api_router.post("/economics/calculate", response_model=EconomicsResult)
+@app.post("/api/economics/calculate", response_model=EconomicsResult)
+@app.post("/economics/calculate", response_model=EconomicsResult)
 async def evaluate_economics(inputs: MerchantEconomicsInput):
     """
     Pure deterministic managerial unit economics calculation in Python.
@@ -135,7 +134,8 @@ class StaleCheckResponse(BaseModel):
     economics: EconomicsResult
 
 
-@api_router.post("/economics/check-stale", response_model=StaleCheckResponse)
+@app.post("/api/economics/check-stale", response_model=StaleCheckResponse)
+@app.post("/economics/check-stale", response_model=StaleCheckResponse)
 async def check_experiment_staleness(payload: StaleCheckRequest):
     """
     Checks whether newly entered cost assumptions invalidate a previously generated experiment.
@@ -158,7 +158,8 @@ async def check_experiment_staleness(payload: StaleCheckRequest):
     )
 
 
-@api_router.post("/research", response_model=ResearchResponse)
+@app.post("/api/research", response_model=ResearchResponse)
+@app.post("/research", response_model=ResearchResponse)
 async def run_research(request: ResearchRequest):
     """
     Validates merchant request, executes You.com live retrieval,
@@ -201,7 +202,8 @@ async def run_research(request: ResearchRequest):
     return saved
 
 
-@api_router.get("/research/{research_id}", response_model=ResearchResponse)
+@app.get("/api/research/{research_id}", response_model=ResearchResponse)
+@app.get("/research/{research_id}", response_model=ResearchResponse)
 async def get_research(research_id: str):
     """Retrieves server-stored research run with verified evidence ledger."""
     saved = storage.get_research(research_id)
@@ -213,7 +215,8 @@ async def get_research(research_id: str):
     return saved
 
 
-@api_router.post("/experiments", response_model=ExperimentRecord)
+@app.post("/api/experiments", response_model=ExperimentRecord)
+@app.post("/experiments", response_model=ExperimentRecord)
 async def create_experiment(input_data: ExperimentCreate):
     """
     Owner acceptance: Converts a verified, server-stored research run
@@ -228,13 +231,15 @@ async def create_experiment(input_data: ExperimentCreate):
     return exp
 
 
-@api_router.get("/experiments")
+@app.get("/api/experiments")
+@app.get("/experiments")
 async def list_experiments():
     """Lists all local experiments with aggregated financial metrics."""
     return storage.list_experiments()
 
 
-@api_router.get("/experiments/{experiment_id}", response_model=ExperimentRecord)
+@app.get("/api/experiments/{experiment_id}", response_model=ExperimentRecord)
+@app.get("/experiments/{experiment_id}", response_model=ExperimentRecord)
 async def get_experiment(experiment_id: str):
     """Retrieves a single experiment with full outcome measurement ledger."""
     exp = storage.get_experiment(experiment_id)
@@ -246,7 +251,8 @@ async def get_experiment(experiment_id: str):
     return exp
 
 
-@api_router.post("/experiments/{experiment_id}/outcome", response_model=ExperimentRecord)
+@app.post("/api/experiments/{experiment_id}/outcome", response_model=ExperimentRecord)
+@app.post("/experiments/{experiment_id}/outcome", response_model=ExperimentRecord)
 async def add_outcome(experiment_id: str, outcome: OutcomeInput):
     """
     Records daily experimental measurement.
@@ -260,11 +266,6 @@ async def add_outcome(experiment_id: str, outcome: OutcomeInput):
         )
     updated_exp = storage.get_experiment(experiment_id)
     return updated_exp
-
-
-# Mount router both with and without /api prefix
-app.include_router(api_router, prefix="/api")
-app.include_router(api_router)
 
 
 # Serve index.html for root route
