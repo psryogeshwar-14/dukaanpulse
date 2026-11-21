@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Load .env if present
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException, status, APIRouter
+from fastapi import FastAPI, HTTPException, status, APIRouter, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -259,3 +259,14 @@ async def serve_index():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return JSONResponse({"message": "DukaanPulse API running. index.html not yet installed."})
+
+
+# Diagnostic fallback: reports the exact URL path received by FastAPI
+@app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE"])
+async def catch_all(request: Request, path_name: str):
+    return JSONResponse({
+        "status": "unmatched_route",
+        "received_path": request.url.path,
+        "path_name": path_name,
+        "registered_routes": [route.path for route in app.routes if hasattr(route, "path")]
+    })
