@@ -6,52 +6,50 @@
   <title>DukaanPulse — Grounded Local-Business Research to Action</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* User's requested palette: #4A6B5D, #F5EFE6, #C85A32 */
-      --pine: #4A6B5D;
-      --pine-dark: #375246;
-      --pine-light: #5E8573;
-      --pine-soft: rgba(74, 107, 93, 0.12);
+      /* User's specified palette */
+      --text: #0F172A;              /* Slate 900: Main text and headings */
+      --text-muted: #64748B;        /* Slate 500 */
+      --text-light: #94A3B8;        /* Slate 400 */
 
-      --cream: #F5EFE6;
-      --cream-dark: #EADFCF;
-      --cream-card: #FFFFFF;
-      --cream-soft: #FAF7F2;
+      --primary: #0F766E;           /* Teal 700: Primary brand and actions */
+      --primary-hover: #115E59;     /* Teal 800 */
+      --primary-light: #F0FDFA;     /* Teal 50 */
+      --primary-border: #99F6E4;    /* Teal 200 */
+      --primary-glow: rgba(15, 118, 110, 0.12);
 
-      --terracotta: #C85A32;
-      --terracotta-dark: #A94723;
-      --terracotta-light: #DE6D43;
-      --terracotta-soft: rgba(200, 90, 50, 0.12);
+      --bg: #F8FAFC;                 /* Slate 50: Page background */
+      --card-bg: #FFFFFF;           /* White surfaces for cards and form controls */
+      --card-border: #E2E8F0;       /* Slate 200: Subtle borders */
+      --card-hover: #F8FAFC;
 
-      /* Semantic tokens */
-      --bg: var(--cream);
-      --card-bg: var(--cream-card);
-      --card-border: #E5DDD0;
-      --card-hover: var(--cream-soft);
-      --text: #202C26;
-      --text-muted: #607068;
-      --text-light: #8E9C95;
+      --accent: #F59E0B;            /* Amber 500: Accent and needs-review highlights */
+      --accent-bg: #FEF3C7;         /* Amber 100 */
+      --accent-border: #FCD34D;     /* Amber 300 */
+      --accent-dark: #B45309;       /* Amber 700 */
 
-      --accent: var(--terracotta);
-      --accent-glow: var(--terracotta-soft);
-      --primary: var(--pine);
-      --primary-hover: var(--pine-dark);
-      --primary-glow: var(--pine-soft);
+      --success: #0F766E;
+      --success-bg: #ECFDF5;
+      --success-border: #A7F3D0;
+      --success-text: #065F46;
 
-      --success: #2F7A56;
-      --success-bg: rgba(47, 122, 86, 0.12);
-      --warning: #D97706;
-      --warning-bg: rgba(217, 119, 6, 0.12);
-      --danger: var(--terracotta);
-      --danger-bg: var(--terracotta-soft);
+      --danger: #DC2626;
+      --danger-bg: #FEF2F2;
+      --danger-border: #FECACA;
+      --danger-text: #991B1B;
 
       --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
 
     body {
       font-family: var(--font);
@@ -61,16 +59,18 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* Header */
     header {
-      background: var(--pine);
-      border-bottom: 1px solid var(--pine-dark);
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
       z-index: 50;
       padding: 1rem 1.5rem;
-      box-shadow: 0 4px 16px rgba(74, 107, 93, 0.18);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     }
 
     .header-container {
@@ -92,59 +92,70 @@
     .brand-icon {
       width: 38px;
       height: 38px;
-      background: var(--terracotta);
+      background: var(--primary);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      color: #fff;
+      color: #FFFFFF;
       font-size: 1.25rem;
-      box-shadow: 0 3px 10px rgba(200, 90, 50, 0.35);
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.25);
     }
 
     .brand-title {
       font-size: 1.25rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #FFFFFF;
+      color: var(--text);
     }
 
     .brand-subtitle {
       font-size: 0.8rem;
-      color: #D6E4DD;
+      color: var(--text-muted);
     }
 
     .nav-tabs {
       display: flex;
-      gap: 0.5rem;
-      background: rgba(0, 0, 0, 0.15);
+      gap: 0.35rem;
+      background: #F1F5F9;
       padding: 4px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--card-border);
     }
 
     .nav-btn {
-      background: none;
+      background: transparent;
       border: none;
-      color: #E2EDE7;
-      padding: 0.45rem 0.9rem;
+      color: var(--text-muted);
+      padding: 0.45rem 0.95rem;
       border-radius: 8px;
       font-family: var(--font);
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
-    .nav-btn:hover { color: #FFFFFF; }
+    .nav-btn:hover:not(:disabled) {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
     .nav-btn.active {
-      background: var(--cream);
-      color: var(--pine-dark);
+      background: #FFFFFF;
+      color: var(--primary);
       font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
     }
 
+    .nav-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Main Container */
     main {
       flex: 1;
       max-width: 1200px;
@@ -156,21 +167,22 @@
     .screen { display: none; }
     .screen.active {
       display: block;
-      animation: fadeIn 0.3s ease-out;
+      animation: fadeIn 0.25s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Cards */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 1.75rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 4px 20px rgba(74, 107, 93, 0.06);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
     }
 
     .card-header {
@@ -191,6 +203,7 @@
       gap: 0.5rem;
     }
 
+    /* Badges */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -203,11 +216,32 @@
       letter-spacing: 0.04em;
     }
 
-    .badge-ready { background: var(--success-bg); color: var(--success); border: 1px solid rgba(47, 122, 86, 0.3); }
-    .badge-insufficient { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); }
-    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(200, 90, 50, 0.3); }
-    .badge-info { background: var(--primary-glow); color: var(--pine-dark); border: 1px solid rgba(74, 107, 93, 0.3); }
+    .badge-ready {
+      background: #CCFBF1;
+      color: #0F766E;
+      border: 1px solid #99F6E4;
+    }
 
+    /* Amber badges use navy text #0F172A */
+    .badge-insufficient, .badge-warning {
+      background: var(--accent-bg); /* #FEF3C7 */
+      color: #0F172A;              /* Navy text */
+      border: 1px solid var(--accent-border); /* #FCD34D */
+    }
+
+    .badge-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 1px solid var(--danger-border);
+    }
+
+    .badge-info {
+      background: #F1F5F9;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Form Controls */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -225,64 +259,80 @@
     label {
       font-size: 0.85rem;
       font-weight: 600;
-      color: #37463F;
+      color: #334155;
     }
 
     input, textarea, select {
-      background: #FAF7F2;
-      border: 1px solid #D8CFC2;
-      border-radius: 10px;
+      background: #FFFFFF; /* White surfaces for form controls */
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
       padding: 0.75rem 1rem;
       color: var(--text);
       font-family: var(--font);
       font-size: 0.95rem;
-      transition: all 0.2s;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
       background: #FFFFFF;
-      border-color: var(--pine);
+      border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
       font-family: var(--font);
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      border: none;
-      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
 
+    /* Primary buttons: teal background and white text */
     .btn-primary {
-      background: linear-gradient(135deg, var(--terracotta), var(--terracotta-light));
+      background: var(--primary);
       color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(200, 90, 50, 0.3);
+      border-color: var(--primary);
     }
 
     .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(200, 90, 50, 0.4);
-      background: linear-gradient(135deg, var(--terracotta-dark), var(--terracotta));
+    }
+
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
     }
 
     .btn-success {
-      background: linear-gradient(135deg, var(--pine), var(--pine-light));
+      background: var(--primary);
       color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(74, 107, 93, 0.25);
+      border-color: var(--primary);
     }
 
     .btn-success:hover:not(:disabled) {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
       transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(74, 107, 93, 0.35);
-      background: linear-gradient(135deg, var(--pine-dark), var(--pine));
     }
 
     .btn:disabled {
@@ -292,9 +342,9 @@
 
     /* Live Progress */
     .progress-box {
-      background: #FAF7F2;
+      background: #F8FAFC;
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 1.5rem;
       font-family: var(--mono);
       font-size: 0.85rem;
@@ -309,71 +359,78 @@
       color: var(--text-muted);
     }
 
-    .stage-item.current { color: var(--terracotta); font-weight: 600; }
-    .stage-item.done { color: var(--pine); font-weight: 600; }
+    .stage-item.current { color: var(--primary); font-weight: 600; }
+    .stage-item.done { color: var(--primary); font-weight: 600; }
 
     .stage-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #D4C9BC;
+      background: #CBD5E1;
     }
 
     .stage-item.current .stage-dot {
-      background: var(--terracotta);
-      box-shadow: 0 0 10px rgba(200, 90, 50, 0.5);
+      background: var(--primary);
+      box-shadow: 0 0 8px rgba(15, 118, 110, 0.5);
       animation: pulse 1.5s infinite;
     }
 
-    .stage-item.done .stage-dot { background: var(--pine); }
+    .stage-item.done .stage-dot { background: var(--primary); }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.2); }
+      50% { opacity: 0.45; transform: scale(1.15); }
     }
 
+    /* Citations */
     .chip {
       display: inline-flex;
       align-items: center;
-      background: #EFE8DD;
-      color: var(--pine-dark);
-      border: 1px solid #D6CBC0;
-      padding: 0.15rem 0.55rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      padding: 0.2rem 0.6rem;
       border-radius: 6px;
       font-family: var(--mono);
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
-      margin: 0 0.2rem;
-      transition: all 0.2s;
+      margin: 0 0.25rem;
+      transition: all 0.15s ease;
     }
 
     .chip:hover {
-      background: var(--terracotta);
+      background: var(--primary);
       color: #FFFFFF;
-      border-color: var(--terracotta);
+      border-color: var(--primary);
     }
 
+    /* Finding cards: White surface with teal accent bar */
     .finding-card {
-      background: #FAF7F2;
+      background: #FFFFFF;
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-left: 3px solid var(--primary);
+      border-radius: 10px;
       padding: 1.25rem;
       margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
     }
 
+    /* Quotes: Clean subtle background */
     .quote-block {
-      background: #F1E9DE;
-      border-left: 3px solid var(--terracotta);
-      padding: 0.6rem 0.9rem;
-      margin-top: 0.6rem;
+      background: #F8FAFC;
+      border-left: 2px solid #94A3B8;
+      padding: 0.65rem 0.95rem;
+      margin-top: 0.65rem;
       font-size: 0.85rem;
-      color: #2F3C35;
+      color: #334155;
       border-radius: 0 6px 6px 0;
+      font-style: italic;
     }
 
+    /* Economics Box & Metrics */
     .econ-box {
-      background: #FAF7F2;
+      background: #FFFFFF;
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.5rem;
@@ -388,11 +445,10 @@
     }
 
     .econ-metric {
-      background: #FFFFFF;
+      background: #F8FAFC;
       border: 1px solid var(--card-border);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     .econ-title {
@@ -400,6 +456,7 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      font-weight: 600;
     }
 
     .econ-val {
@@ -409,9 +466,30 @@
       margin-top: 0.25rem;
     }
 
+    /* Experiment Proposal Card: Subtle teal border highlight */
     .experiment-card {
-      border: 2px solid var(--pine);
-      background: linear-gradient(180deg, rgba(74, 107, 93, 0.06) 0%, #FFFFFF 100%);
+      border: 1px solid var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 1px 4px rgba(15, 118, 110, 0.08);
+    }
+
+    /* Hypothesis Box: Amber highlight */
+    .hypothesis-box {
+      margin: 1.5rem 0;
+      background: #FFFFFF;
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      border-radius: 10px;
+    }
+
+    /* Stale Simulator Box */
+    .simulator-box {
+      background: #FFFFFF;
+      border: 1px dashed var(--accent);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
     }
 
     .step-list {
@@ -422,7 +500,7 @@
 
     .step-list li {
       margin-bottom: 0.4rem;
-      color: #2D3A33;
+      color: #334155;
     }
 
     .metric-grid {
@@ -433,9 +511,9 @@
     }
 
     .metric-card {
-      background: #FAF7F2;
+      background: #FFFFFF;
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 1.25rem;
       display: flex;
       flex-direction: column;
@@ -447,6 +525,7 @@
       letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-bottom: 0.4rem;
+      font-weight: 600;
     }
 
     .metric-value {
@@ -462,16 +541,16 @@
     }
 
     .metric-highlight {
-      border-color: var(--pine);
-      background: rgba(74, 107, 93, 0.08);
+      border-color: var(--primary);
+      background: var(--primary-light);
     }
 
-    .metric-highlight .metric-value { color: var(--pine-dark); }
+    .metric-highlight .metric-value { color: var(--primary); }
 
     .table-container {
       overflow-x: auto;
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 10px;
       background: #FFFFFF;
     }
 
@@ -483,16 +562,16 @@
     }
 
     th {
-      background: #F1E9DE;
+      background: #F8FAFC;
       padding: 0.85rem 1rem;
       font-weight: 700;
-      color: var(--pine-dark);
+      color: #334155;
       border-bottom: 1px solid var(--card-border);
     }
 
     td {
       padding: 0.85rem 1rem;
-      border-bottom: 1px solid #EFE8DD;
+      border-bottom: 1px solid #F1F5F9;
       color: var(--text);
     }
 
@@ -502,7 +581,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(33, 44, 38, 0.6);
+      background: rgba(15, 23, 42, 0.4);
       backdrop-filter: blur(4px);
       z-index: 100;
       align-items: center;
@@ -515,11 +594,11 @@
     .modal-content {
       background: #FFFFFF;
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       max-width: 650px;
       width: 100%;
       padding: 2rem;
-      box-shadow: 0 20px 40px rgba(74, 107, 93, 0.16);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
       position: relative;
       color: var(--text);
     }
@@ -533,13 +612,14 @@
       color: var(--text-muted);
       font-size: 1.5rem;
       cursor: pointer;
+      line-height: 1;
     }
 
     .modal-close:hover { color: var(--text); }
 
     .alert {
       padding: 1rem 1.25rem;
-      border-radius: 10px;
+      border-radius: 8px;
       margin-bottom: 1.25rem;
       font-size: 0.9rem;
       display: flex;
@@ -549,14 +629,14 @@
 
     .alert-danger {
       background: var(--danger-bg);
-      border: 1px solid rgba(200, 90, 50, 0.35);
-      color: #8C2E0E;
+      border: 1px solid var(--danger-border);
+      color: var(--danger-text);
     }
 
     .alert-warning {
       background: var(--warning-bg);
-      border: 1px solid rgba(201, 114, 23, 0.35);
-      color: #8A4C0A;
+      border: 1px solid var(--warning-border);
+      color: var(--warning-text); /* Navy text */
     }
 
     footer {
@@ -566,7 +646,7 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: auto;
-      background: #FAF7F2;
+      background: #FFFFFF;
     }
   </style>
 </head>
@@ -610,11 +690,11 @@
         </p>
 
         <!-- Quick Demo Scenarios Selector -->
-        <div style="background: rgba(74, 107, 93, 0.08); border: 1px solid #CCD8D2; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #4A6B5D; text-transform: uppercase;">Quick Demo Scenarios:</span>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #4A6B5D; color: #F5EFE6; border: 1px solid #375246;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #C85A32; color: #F5EFE6; border: 1px solid #A94723;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
-          <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FFF1E6; color: #C85A32; border: 1px solid #F0C2A8;" onclick="loadScenario('loss_making_matcha')">Scenario 3: High-Cost Matcha (Negative Margin Warning)</button>
+        <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">Quick Demo Scenarios:</span>
+          <button type="button" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="loadScenario('hsr_cafe')">Scenario 1: HSR Café (Viable 63% Margin)</button>
+          <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="loadScenario('indiranagar_bakery')">Scenario 2: Indiranagar Bakery (₹1,500 Budget)</button>
+          <button type="button" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: var(--accent-bg); color: #0F172A; border: 1px solid var(--accent-border);" onclick="loadScenario('loss_making_matcha')">Scenario 3: High-Cost Matcha (Negative Margin Warning)</button>
         </div>
 
         <form id="researchForm" onsubmit="handleFormSubmit(event)">
@@ -648,7 +728,7 @@
           <!-- Section 1B: Owner Unit Economics Assumptions -->
           <div class="econ-box" style="margin-top: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-              <h3 style="font-size: 1rem; color: #fff; font-weight: 700;">Owner-Entered Unit Economics (Assumptions)</h3>
+              <h3 style="font-size: 1rem; color: var(--text); font-weight: 700;">Owner-Entered Unit Economics (Assumptions)</h3>
               <span class="badge badge-info">Deterministic Python Math</span>
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
@@ -690,7 +770,7 @@
               </div>
               <div class="econ-metric">
                 <div class="econ-title">Contribution / Order</div>
-                <div class="econ-val" style="color: var(--success);" id="liveContrib">₹114.00</div>
+                <div class="econ-val" style="color: var(--primary);" id="liveContrib">₹114.00</div>
               </div>
               <div class="econ-metric">
                 <div class="econ-title">Gross Margin %</div>
@@ -702,7 +782,7 @@
               </div>
             </div>
 
-            <div id="liveGuidanceBox" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7;">
+            <div id="liveGuidanceBox" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46;">
               FINANCIALLY VIABLE. Generates positive contribution of ₹114.00 per bundle (63.7% margin). 4 orders required to recover one-time setup cost.
             </div>
           </div>
@@ -762,7 +842,7 @@
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="reportMetaInfo"></div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="printSOPCard()">
+            <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="printSOPCard()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               <span>Print Staff SOP Card</span>
             </button>
@@ -780,7 +860,7 @@
         </div>
 
         <!-- 1. Factual Observations with Evidence Chips -->
-        <h3 style="font-size: 1rem; color: #4A6B5D; margin-bottom: 0.75rem;">
+        <h3 style="font-size: 1rem; color: var(--primary); margin-bottom: 0.75rem;">
           1. Factual Market Observations (Click chip to inspect You.com excerpt)
         </h3>
         <div id="observationsContainer"></div>
@@ -795,29 +875,29 @@
           <div id="reportEconGuidance" style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem;"></div>
 
           <!-- Stale Assumption Simulator Box -->
-          <div style="background: #FAF7F2; border: 1px dashed #C85A32; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.25rem;">
+          <div class="simulator-box">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <strong style="color: #C85A32; font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
+              <strong style="color: var(--accent-dark); font-size: 0.85rem;">Test Cost Sensitivity (Stale Advice Simulator):</strong>
               <span style="font-size: 0.75rem; color: var(--text-muted);">See what happens if supplier ingredient costs surge</span>
             </div>
             <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
               <label for="simIngredientCost" style="font-size: 0.8rem;">Simulate Ingredient Cost (₹):</label>
               <input type="number" id="simIngredientCost" value="130" style="width: 110px; padding: 0.35rem 0.5rem; font-size: 0.85rem;">
               <button type="button" class="btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;" onclick="simulateCostChange()">Check Invalidation</button>
-              <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #EFE8DD; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="resetSimCost()">Reset to Original</button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="resetSimCost()">Reset to Original</button>
             </div>
           </div>
         </div>
 
         <!-- 3. Material Unknowns -->
         <div style="margin: 1.5rem 0;">
-          <h3 style="font-size: 1rem; color: #4A6B5D; margin-bottom: 0.5rem;">3. Material Unknowns & Information Gaps</h3>
+          <h3 style="font-size: 1rem; color: var(--primary); margin-bottom: 0.5rem;">3. Material Unknowns & Information Gaps</h3>
           <ul id="unknownsList" style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.9rem;"></ul>
         </div>
 
         <!-- 4. Tentative Hypothesis -->
-        <div style="margin: 1.5rem 0; background: #FAF7F2; border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 12px;">
-          <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+        <div class="hypothesis-box">
+          <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent-dark); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
             4. Tentative Opportunity Hypothesis (Not Proven Demand)
           </div>
           <p id="hypothesisText" style="color: var(--text); font-size: 0.95rem;"></p>
@@ -826,16 +906,16 @@
         <!-- 5. Bounded Experiment Proposal -->
         <div class="card experiment-card" id="experimentProposalBox">
           <div class="card-header">
-            <div class="card-title" style="color: #4A6B5D;">
+            <div class="card-title" style="color: var(--primary);">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
               <span id="experimentTitle">Proposed Bounded Experiment</span>
             </div>
             <span class="badge badge-info" id="experimentBudgetBadge">Max Ceiling: ₹2,000</span>
           </div>
 
-          <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem;">
-            <strong style="color: #f59e0b;">Pre-Spending Validation Step:</strong>
-            <div id="experimentValidationStep" style="color: #e2e8f0; margin-top: 0.2rem;"></div>
+          <div style="background: var(--accent-bg); border-left: 3px solid var(--accent); padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem;">
+            <strong style="color: var(--accent-dark);">Pre-Spending Validation Step:</strong>
+            <div id="experimentValidationStep" style="color: var(--text); margin-top: 0.2rem;"></div>
           </div>
 
           <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
@@ -843,11 +923,11 @@
           </p>
           <ol class="step-list" id="experimentSteps"></ol>
 
-          <div style="background: rgba(74, 107, 93, 0.08); border: 1px solid rgba(74, 107, 93, 0.2); padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; font-size: 0.85rem;">
-            <div style="font-weight: 600; color: #4A6B5D; margin-bottom: 0.2rem;">Owner-Approved Success Target:</div>
+          <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; font-size: 0.85rem;">
+            <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.2rem;">Owner-Approved Success Target:</div>
             <div id="experimentSuccessTarget" style="color: var(--text);"></div>
-            <div style="font-weight: 600; color: #C85A32; margin-top: 0.5rem; margin-bottom: 0.2rem;">Stop / Revise Conditions:</div>
-            <ul id="experimentStopConditions" style="padding-left: 1.25rem; color: #A94723;"></ul>
+            <div style="font-weight: 600; color: var(--danger-text); margin-top: 0.5rem; margin-bottom: 0.2rem;">Stop / Revise Conditions:</div>
+            <ul id="experimentStopConditions" style="padding-left: 1.25rem; color: var(--danger-text);"></ul>
           </div>
 
           <!-- Owner Approval CTA -->
@@ -856,8 +936,8 @@
               By accepting, you lock this experiment and its snapshot of cost assumptions into SQLite storage and launch the measurement tracker.
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn" style="background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2; font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
-              <button class="btn btn-success" id="btnAcceptExperiment" onclick="acceptExperiment()">
+              <button type="button" class="btn btn-secondary" style="font-size: 0.85rem;" onclick="printSOPCard()">Print SOP</button>
+              <button class="btn btn-primary" id="btnAcceptExperiment" onclick="acceptExperiment()">
                 <span>Approve & Accept Experiment</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               </button>
@@ -868,7 +948,7 @@
         <!-- 6. Limitations & Disclaimers -->
         <div style="margin-top: 1.5rem;">
           <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">Methodology Limitations</h4>
-          <ul id="limitationsList" style="padding-left: 1.25rem; color: #607068; font-size: 0.8rem;"></ul>
+          <ul id="limitationsList" style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.8rem;"></ul>
         </div>
       </div>
     </section>
@@ -882,7 +962,7 @@
             <div style="font-size: 0.8rem; color: var(--text-muted);" id="trackerExpMeta"></div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #FAF7F2; color: #4A6B5D; border: 1px solid #D8CFC2;" onclick="printSOPCard()">
+            <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="printSOPCard()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               <span>Print Staff SOP</span>
             </button>
@@ -891,8 +971,8 @@
         </div>
 
         <!-- Experiment Approved Assumptions Snapshot -->
-        <div style="background: #FAF7F2; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
-          <strong style="color: #4A6B5D;">Approved Assumptions at Acceptance:</strong>
+        <div style="background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
+          <strong style="color: var(--primary);">Approved Assumptions at Acceptance:</strong>
           <div id="trackerAssumptions" style="color: var(--text); margin-top: 0.25rem;"></div>
         </div>
 
@@ -924,7 +1004,7 @@
         </div>
 
         <!-- Outcome Entry Form -->
-        <div style="background: #FAF7F2; border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+        <div style="background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
           <h4 style="font-size: 0.95rem; color: var(--text); margin-bottom: 0.75rem;">Log Daily Test Measurement</h4>
           <form id="outcomeForm" onsubmit="handleOutcomeSubmit(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: flex-end;">
             <div class="form-group">
@@ -956,7 +1036,7 @@
         </div>
 
         <!-- Outcome Historical Table -->
-        <h4 style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 0.75rem;">Experiment Measurement Ledger</h4>
+        <h4 style="font-size: 0.95rem; color: var(--text); margin-bottom: 0.75rem;">Experiment Measurement Ledger</h4>
         <div class="table-container">
           <table>
             <thead>
@@ -993,13 +1073,13 @@
       </div>
 
       <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
-        <div><strong>Source Query:</strong> <span id="modalEvidenceQuery" style="font-family: var(--mono); color: var(--pine-dark);"></span></div>
+        <div><strong>Source Query:</strong> <span id="modalEvidenceQuery" style="font-family: var(--mono); color: var(--primary);"></span></div>
         <div><strong>Retrieval Timestamp:</strong> <span id="modalEvidenceRetrieved"></span></div>
         <div><strong>Source Publication Date:</strong> <span id="modalEvidenceDate">Not reported</span></div>
       </div>
 
-      <div style="background: #FAF7F2; border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
-        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 0.4rem;">
+      <div style="background: #F8FAFC; border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-bottom: 0.4rem;">
           Retrieved Excerpt from You.com
         </div>
         <p id="modalEvidenceSnippet" style="color: var(--text); font-size: 0.9rem; line-height: 1.5;"></p>
@@ -1124,28 +1204,28 @@
       const guidanceBox = document.getElementById('liveGuidanceBox');
 
       if (contrib > 0) {
-        contribEl.style.color = 'var(--success)';
+        contribEl.style.color = 'var(--primary)';
         const breakEven = setup > 0 ? Math.ceil(setup / contrib) : 0;
         breakEvenEl.textContent = `${breakEven} orders`;
 
         const totalEst = setup + (qty * varCost);
         if (totalEst > budget) {
-          guidanceBox.style.background = 'rgba(200, 90, 50, 0.12)';
-          guidanceBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
-          guidanceBox.style.color = '#8C2E0E';
+          guidanceBox.style.background = '#FEF2F2';
+          guidanceBox.style.border = '1px solid #FECACA';
+          guidanceBox.style.color = '#991B1B';
           guidanceBox.textContent = `OVER BUDGET. Estimated pilot cost (₹${totalEst.toFixed(2)}) exceeds budget ceiling of ₹${budget.toFixed(2)}. Reduce planned batch size or setup costs.`;
         } else {
-          guidanceBox.style.background = 'rgba(74, 107, 93, 0.12)';
-          guidanceBox.style.border = '1px solid rgba(74, 107, 93, 0.35)';
-          guidanceBox.style.color = '#254B38';
+          guidanceBox.style.background = '#ECFDF5';
+          guidanceBox.style.border = '1px solid #A7F3D0';
+          guidanceBox.style.color = '#065F46';
           guidanceBox.textContent = `FINANCIALLY VIABLE. Generates positive contribution of ₹${contrib.toFixed(2)}/order (${margin}% margin). ${breakEven} orders cover setup expenses.`;
         }
       } else {
-        contribEl.style.color = 'var(--danger)';
+        contribEl.style.color = 'var(--danger-text)';
         breakEvenEl.textContent = 'None (Negative)';
-        guidanceBox.style.background = 'rgba(200, 90, 50, 0.12)';
-        guidanceBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
-        guidanceBox.style.color = '#8C2E0E';
+        guidanceBox.style.background = '#FEF2F2';
+        guidanceBox.style.border = '1px solid #FECACA';
+        guidanceBox.style.color = '#991B1B';
         guidanceBox.textContent = `DO NOT LAUNCH. Unit variable costs (₹${varCost.toFixed(2)}) equal or exceed selling price (₹${price.toFixed(2)}). Every order loses money.`;
       }
     }
@@ -1246,7 +1326,7 @@
         statusBadge.textContent = 'Verified Grounded';
         document.getElementById('experimentProposalBox').style.display = 'block';
       } else if (report.status === 'needs_owner_input') {
-        statusBadge.className = 'badge badge-insufficient';
+        statusBadge.className = 'badge badge-warning';
         statusBadge.textContent = 'Needs Cost Revision';
         document.getElementById('experimentProposalBox').style.display = 'block';
       } else {
@@ -1309,7 +1389,7 @@
       if (econ) {
         const metrics = [
           { title: 'Variable Cost / Order', val: `₹${econ.variable_cost_per_order.toFixed(2)}` },
-          { title: 'Contribution / Order', val: `₹${econ.contribution_per_order.toFixed(2)}`, color: econ.contribution_per_order > 0 ? 'var(--success)' : 'var(--danger)' },
+          { title: 'Contribution / Order', val: `₹${econ.contribution_per_order.toFixed(2)}`, color: econ.contribution_per_order > 0 ? 'var(--primary)' : 'var(--danger-text)' },
           { title: 'Gross Margin %', val: `${econ.gross_margin_pct || 0}%` },
           { title: 'Break-Even on Setup', val: econ.orders_to_cover_setup_cost !== null ? `${econ.orders_to_cover_setup_cost} orders` : 'None (Negative)' }
         ];
@@ -1332,14 +1412,14 @@
         const gBox = document.getElementById('reportEconGuidance');
         gBox.textContent = econ.guidance;
         if (econ.is_viable) {
-          gBox.style.background = 'rgba(74, 107, 93, 0.12)';
-          gBox.style.color = '#254B38';
-          gBox.style.border = '1px solid rgba(74, 107, 93, 0.35)';
+          gBox.style.background = '#ECFDF5';
+          gBox.style.color = '#065F46';
+          gBox.style.border = '1px solid #A7F3D0';
           document.getElementById('btnAcceptExperiment').disabled = false;
         } else {
-          gBox.style.background = 'rgba(200, 90, 50, 0.12)';
-          gBox.style.color = '#8C2E0E';
-          gBox.style.border = '1px solid rgba(200, 90, 50, 0.35)';
+          gBox.style.background = '#FEF2F2';
+          gBox.style.color = '#991B1B';
+          gBox.style.border = '1px solid #FECACA';
           document.getElementById('btnAcceptExperiment').disabled = true;
         }
       }
@@ -1458,21 +1538,21 @@
         <head>
           <title>Staff SOP Experiment Card - DukaanPulse</title>
           <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #202C26; background: #F5EFE6; line-height: 1.5; }
-            .box { border: 2px solid #4A6B5D; padding: 1.5rem; border-radius: 8px; background: #FFFFFF; }
-            h1 { font-size: 1.4rem; margin-top: 0; color: #202C26; }
-            .badge { display: inline-block; padding: 4px 8px; background: #4A6B5D; color: #FFFFFF; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #0F172A; background: #F8FAFC; line-height: 1.5; }
+            .box { border: 2px solid #0F766E; padding: 1.5rem; border-radius: 8px; background: #FFFFFF; }
+            h1 { font-size: 1.4rem; margin-top: 0; color: #0F172A; }
+            .badge { display: inline-block; padding: 4px 8px; background: #0F766E; color: #FFFFFF; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
             ul, ol { padding-left: 1.25rem; }
             li { margin-bottom: 0.5rem; }
             table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #FFFFFF; }
-            th, td { border: 1px solid #D8CFC2; padding: 8px; text-align: left; }
-            th { background: #EFE8DD; color: #4A6B5D; }
+            th, td { border: 1px solid #CBD5E1; padding: 8px; text-align: left; }
+            th { background: #F1F5F9; color: #0F172A; }
             @media print { button { display: none; } }
           </style>
         </head>
         <body>
           <div style="margin-bottom: 1rem;">
-            <button onclick="window.print()" style="padding: 8px 16px; background: #C85A32; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
+            <button onclick="window.print()" style="padding: 8px 16px; background: #0F766E; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Print SOP Card</button>
           </div>
           <div class="box">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1481,16 +1561,16 @@
             </div>
             <h1>${exp.title}</h1>
             <p><strong>Locality:</strong> ${currentResearch.locality} | <strong>Category:</strong> ${currentResearch.category}</p>
-            <hr/>
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid #E2E8F0;"/>
             <h3>1. Pre-Spending Validation Step:</h3>
             <p>${exp.validation_step}</p>
-            <h3>2. Kitchen & Staff Action Checklist:</h3>
+            <h3 style="margin-top: 1rem;">2. Kitchen & Staff Action Checklist:</h3>
             <ul style="list-style-type: none; padding-left: 0;">${stepsHtml}</ul>
-            <h3>3. Success Target:</h3>
+            <h3 style="margin-top: 1rem;">3. Success Target:</h3>
             <p>${exp.success_criterion}</p>
-            <h3>4. Stop / Abort Conditions:</h3>
-            <ul style="list-style-type: none; padding-left: 0; color: #b91c1c;">${stopHtml}</ul>
-            <h3>5. Daily Order Logging Log:</h3>
+            <h3 style="margin-top: 1rem;">4. Stop / Abort Conditions:</h3>
+            <ul style="list-style-type: none; padding-left: 0; color: #991B1B;">${stopHtml}</ul>
+            <h3 style="margin-top: 1rem;">5. Daily Order Logging Log:</h3>
             <table>
               <thead>
                 <tr><th>Day</th><th>Date</th><th>Orders Sold</th><th>Revenue (₹)</th><th>Ingredient Waste / Notes</th></tr>
@@ -1604,7 +1684,7 @@
           tdCost.textContent = `₹${m.variable_cost.toLocaleString()}`;
           const tdContrib = document.createElement('td');
           tdContrib.style.fontWeight = '700';
-          tdContrib.style.color = 'var(--success)';
+          tdContrib.style.color = 'var(--primary)';
           tdContrib.textContent = `₹${m.contribution.toLocaleString()}`;
           const tdNotes = document.createElement('td');
           tdNotes.textContent = m.notes || '—';
